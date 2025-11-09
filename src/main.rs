@@ -1,3 +1,6 @@
+mod persona_types;
+
 fn main() {
-    println!("Hello, world!");
+    use persona_types::arcana::Arcana::*;
+    println!("Hello, world! {:?}", (Judgement - Sun));
 }
