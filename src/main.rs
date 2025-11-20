@@ -1,6 +1,6 @@
-mod persona_types;
+mod persona;
 
 fn main() {
-    use persona_types::arcana::Arcana::*;
+    use persona::arcana::Arcana::*;
     println!("result: {:?}", Hermit - Fool)
 }
