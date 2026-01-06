@@ -12,6 +12,7 @@ pub enum SkillType {
     Support,
     Ailment,
     Passive,
+    Almighty,
 }
 
 pub struct Skill {
