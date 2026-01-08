@@ -1,6 +1,7 @@
+use std::collections::HashSet;
 use std::ops::{Add, Sub};
 
-#[derive(Debug, Clone, Copy, PartialEq)]
+#[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Eq, Hash)]
 pub enum Arcana {
     Fool,
     Magician,
@@ -27,6 +28,10 @@ pub enum Arcana {
 }
 
 impl Arcana {
+    /**
+     * Returns an iterator over the arcana in order that
+     * they are in persona
+     */
     pub fn iterator() -> impl Iterator<Item = Arcana> {
         use Arcana::*;
         [
@@ -36,6 +41,25 @@ impl Arcana {
         ]
         .iter()
         .copied()
+    }
+
+    /**
+     * Gets the possible arcana combos in fusion that results in
+     * the arcana the method is called on
+     */
+    pub fn get_possible_combos(self) -> HashSet<(Arcana, Arcana)> {
+        let mut arcana_combos = HashSet::new();
+        for arcana_1 in Arcana::iterator() {
+            let possible_arcanas = self - arcana_1;
+            for arcana_2 in possible_arcanas {
+                arcana_combos.insert(if arcana_1 < arcana_2 {
+                    (arcana_1, arcana_2)
+                } else {
+                    (arcana_2, arcana_1)
+                });
+            }
+        }
+        arcana_combos
     }
 }
 

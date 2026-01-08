@@ -1,5 +1,3 @@
-use crate::persona;
-
 use super::arcana::Arcana;
 use super::skills::*;
 
@@ -7,6 +5,7 @@ pub struct Persona {
     pub name: String,
     pub arcana: Arcana,
     pub base_level: u8,
+    pub special_recipe: bool,
     pub affinities: [u8; 10],
     pub inheritance: Vec<SkillType>,
     pub skills: Vec<(Skill, u8)>,
@@ -62,10 +61,10 @@ impl Persona {
     }
 
     /**
-     * Returns a list of all possible forward fusions of some persona in a fusion
-     * database
+     * Returns a list of all possible forward fusions of a persona
      *
-     *
+     * This returns the references of the other ingrdient and its
+     * corresponding result persona
      */
     pub fn find_all_forward_fusions<'a>(
         &self,
@@ -79,5 +78,14 @@ impl Persona {
             }
         }
         forward_fusions
+    }
+    /**
+     *
+     */
+    pub fn find_all_reverse_fusions<'a>(
+        &self,
+        persona_list: &'a Vec<Self>,
+    ) -> Option<Vec<(&'a Self, &'a Self)>> {
+        if self.special_recipe { None } else { todo!() }
     }
 }
