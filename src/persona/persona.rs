@@ -1,3 +1,5 @@
+use crate::persona::arcana;
+
 use super::arcana::Arcana;
 use super::skills::*;
 
@@ -34,23 +36,23 @@ impl Persona {
             let fused_level = (self.base_level + rhs.base_level) / 2 + 1;
             let mut result_level = 99;
             for persona in persona_list {
-                println!("{}", persona.name);
                 if (persona.arcana == fused_arcana)
                     && (persona.base_level >= fused_level)
                     && (persona.base_level < result_level)
+                    && (!persona.special_recipe)
                 {
-                    println!("{:?}", fused_level);
                     result_level = persona.base_level;
                     result_persona = Some(persona)
                 }
             }
         } else {
             let fused_level = (self.base_level + rhs.base_level) / 2 - 1;
+            let mut result_level = 0;
             for persona in persona_list {
-                let mut result_level = 0;
                 if (persona.arcana == fused_arcana)
                     && (persona.base_level <= fused_level)
                     && (persona.base_level > result_level)
+                    && (!persona.special_recipe)
                 {
                     result_level = persona.base_level;
                     result_persona = Some(persona)
@@ -80,12 +82,67 @@ impl Persona {
         forward_fusions
     }
     /**
-     *
+     * Finds all recipies which creates a persona
      */
     pub fn find_all_reverse_fusions<'a>(
         &self,
         persona_list: &'a Vec<Self>,
     ) -> Option<Vec<(&'a Self, &'a Self)>> {
-        if self.special_recipe { None } else { todo!() }
+        if self.special_recipe {
+            None
+        } else {
+            let fusion_pairs = self.arcana.get_possible_combos();
+            for (arcana_1, arcana_2) in fusion_pairs {}
+            todo!()
+        }
+    }
+}
+
+#[cfg(test)]
+mod persona_tests {
+    use crate::persona;
+
+    use super::*;
+
+    #[test]
+    fn test_fuse() {
+        use Arcana::*;
+        let orpheus = Persona {
+            name: String::from("Orpheus"),
+            arcana: Fool,
+            base_level: 1,
+            special_recipe: false,
+            affinities: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            inheritance: vec![],
+            skills: vec![],
+            cost: 0,
+            stats: [0, 0, 0, 0, 0],
+        };
+        let nekomata = Persona {
+            name: String::from("Nekomata"),
+            arcana: Magician,
+            base_level: 3,
+            special_recipe: false,
+            affinities: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            inheritance: vec![],
+            skills: vec![],
+            cost: 0,
+            stats: [0, 0, 0, 0, 0],
+        };
+        let omoikane = Persona {
+            name: String::from("Omoikane"),
+            arcana: Hierophant,
+            base_level: 7,
+            special_recipe: false,
+            affinities: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            inheritance: vec![],
+            skills: vec![],
+            cost: 0,
+            stats: [0, 0, 0, 0, 0],
+        };
+        let persona_db = vec![orpheus, nekomata, omoikane];
+
+        let result = persona_db[0].fuse(&persona_db[1], &persona_db);
+        assert_eq!(result.unwrap().name, persona_db[2].name);
     }
 }
