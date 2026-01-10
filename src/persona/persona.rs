@@ -1,4 +1,4 @@
-use crate::persona::arcana;
+use crate::persona;
 
 use super::arcana::Arcana;
 use super::skills::*;
@@ -82,7 +82,10 @@ impl Persona {
         forward_fusions
     }
     /**
-     * Finds all recipies which creates a persona
+     * Finds all recipes which creates a persona
+     *
+     * This is done by searching all arcana pairs that result in a persona, and then
+     * finding personas belonging to each pair that fuses into the result.
      */
     pub fn find_all_reverse_fusions<'a>(
         &self,
@@ -91,16 +94,30 @@ impl Persona {
         if self.special_recipe {
             None
         } else {
+            let mut reverse_fusions = vec![];
             let fusion_pairs = self.arcana.get_possible_combos();
-            for (arcana_1, arcana_2) in fusion_pairs {}
-            todo!()
+            for (arcana_1, arcana_2) in fusion_pairs {
+                for persona_1 in persona_list {
+                    for persona_2 in persona_list {
+                        if (persona_1.arcana == arcana_1)
+                            && (persona_2.arcana == arcana_2)
+                            && (match persona_1.fuse(persona_2, persona_list) {
+                                None => false,
+                                Some(result) => result.name == self.name,
+                            })
+                        {
+                            reverse_fusions.push((persona_1, persona_2));
+                        }
+                    }
+                }
+            }
+            return Some(reverse_fusions);
         }
     }
 }
 
 #[cfg(test)]
 mod persona_tests {
-    use crate::persona;
 
     use super::*;
 
