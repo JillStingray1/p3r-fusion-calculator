@@ -118,11 +118,9 @@ impl Persona {
 
 #[cfg(test)]
 mod persona_tests {
-
     use super::*;
 
-    #[test]
-    fn test_fuse() {
+    fn make_persona_list() -> Vec<Persona> {
         use Arcana::*;
         let orpheus = Persona {
             name: String::from("Orpheus"),
@@ -157,9 +155,25 @@ mod persona_tests {
             cost: 0,
             stats: [0, 0, 0, 0, 0],
         };
-        let persona_db = vec![orpheus, nekomata, omoikane];
+        vec![orpheus, nekomata, omoikane]
+    }
 
+    #[test]
+    fn test_fuse() {
+        let persona_db = make_persona_list();
         let result = persona_db[0].fuse(&persona_db[1], &persona_db);
         assert_eq!(result.unwrap().name, persona_db[2].name);
+    }
+
+    #[test]
+    fn test_reverse_fuse() {
+        let persona_db = make_persona_list();
+        let result =
+            persona_db[2].find_all_reverse_fusions(&persona_db).unwrap();
+
+        assert_eq!(
+            (&result[0].0.name, &result[0].1.name),
+            (&persona_db[0].name, &persona_db[1].name)
+        )
     }
 }
