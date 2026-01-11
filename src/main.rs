@@ -1,3 +1,4 @@
-fn main() {
-    println!("Hello, world!");
-}
+mod data;
+mod persona;
+
+fn main() {}
