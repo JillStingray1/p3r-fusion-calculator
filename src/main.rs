@@ -1,11 +1,13 @@
-mod data;
+mod create_db;
 mod persona;
 
-use actix_web::{App, HttpResponse, HttpServer, Responder, get, post, web};
+use actix_web::{
+    App, HttpResponse, HttpServer, Responder, get, post, web::Path,
+};
 use tera::{Context, Tera};
 
-#[get("/example")]
-async fn example() -> impl Responder {
+#[get("/persona_list")]
+async fn persona_list() -> impl Responder {
     let mut context = Context::new();
     context.insert("variable", "wow");
     let tera =
@@ -14,22 +16,24 @@ async fn example() -> impl Responder {
     HttpResponse::Ok().body(tera)
 }
 
-#[post("/echo")]
-async fn echo(req_body: String) -> impl Responder {
-    HttpResponse::Ok().body(req_body)
+#[get("/skill_list")]
+async fn skills() -> impl Responder {
+    HttpResponse::Ok().body("Todo")
 }
 
-async fn manual_hello() -> impl Responder {
-    HttpResponse::Ok().body("Hey there!")
+#[get("/persona/{persona}")]
+async fn persona_details(path: Path<String>) -> impl Responder {
+    let persona_name = path.into_inner();
+    HttpResponse::Ok().body(format!("TODO: get details for {}", persona_name))
 }
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
-            .service(example)
-            .service(echo)
-            .route("/hey", web::get().to(manual_hello))
+            .service(persona_list)
+            .service(skills)
+            .service(persona_details)
     })
     .bind(("127.0.0.1", 8080))?
     .run()
