@@ -1,18 +1,18 @@
 mod create_db;
 mod persona;
 
+use actix_files::Files;
 use actix_web::{
-    App, HttpResponse, HttpServer, Responder, get, post, web::Path,
+    App, HttpRequest, HttpResponse, HttpServer, Responder, get, post, web::Path,
 };
+
 use tera::{Context, Tera};
 
 #[get("/persona_list")]
-async fn persona_list() -> impl Responder {
+async fn persona_list(req: HttpRequest) -> impl Responder {
     let mut context = Context::new();
-    context.insert("variable", "wow");
-    let tera =
-        Tera::one_off(include_str!("templates/home.html"), &context, false)
-            .expect("Unable to render template");
+    let tera = Tera::one_off(include_str!("static/home.html"), &context, false)
+        .expect("Unable to render template");
     HttpResponse::Ok().body(tera)
 }
 
@@ -31,6 +31,7 @@ async fn persona_details(path: Path<String>) -> impl Responder {
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
+            .service(Files::new("/static", "src/static/.").show_files_listing())
             .service(persona_list)
             .service(skills)
             .service(persona_details)
