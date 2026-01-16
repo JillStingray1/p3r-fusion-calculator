@@ -1,19 +1,21 @@
 mod create_db;
 mod persona;
+mod templates;
 
 use actix_files::Files;
 use actix_web::{
     App, HttpRequest, HttpResponse, HttpServer, Responder, get, post, web::Path,
 };
+use templates::*;
 
-use tera::{Context, Tera};
+use crate::create_db::make_db::make_persona_db;
 
 #[get("/persona_list")]
 async fn persona_list(req: HttpRequest) -> impl Responder {
-    let mut context = Context::new();
-    let tera = Tera::one_off(include_str!("static/home.html"), &context, false)
-        .expect("Unable to render template");
-    HttpResponse::Ok().body(tera)
+    let template = PersonaListTemplate {
+        persona_list: &make_persona_db(),
+    };
+    HttpResponse::Ok().body(template.render().unwrap())
 }
 
 #[get("/skill_list")]
@@ -31,12 +33,12 @@ async fn persona_details(path: Path<String>) -> impl Responder {
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
-            .service(Files::new("/static", "src/static/.").show_files_listing())
+            .service(Files::new("/static", "static/.").show_files_listing())
             .service(persona_list)
             .service(skills)
             .service(persona_details)
     })
-    .bind(("127.0.0.1", 8080))?
+    .bind(("127.0.0.1", 5000))?
     .run()
     .await
 }
