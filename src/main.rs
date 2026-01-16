@@ -6,9 +6,8 @@ use actix_files::Files;
 use actix_web::{
     App, HttpRequest, HttpResponse, HttpServer, Responder, get, post, web::Path,
 };
+use create_db::make_persona_db;
 use templates::*;
-
-use crate::create_db::make_db::make_persona_db;
 
 #[get("/persona_list")]
 async fn persona_list(req: HttpRequest) -> impl Responder {
