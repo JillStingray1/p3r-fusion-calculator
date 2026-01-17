@@ -16,14 +16,13 @@ pub struct Persona {
 }
 
 impl Persona {
-    /**
-     * Gets the result of a fusion between 2 personae.
-     *
-     * This is determined by the using the fusion table to determine
-     * the resultant arcana of the fusion, and then finding the lowest
-     * level persona above the average level of the ingredients + 1
-     *
-     */
+    /// Gets the result of a fusion between 2 personae.
+    ///
+    /// This is determined by the using the fusion table to determine
+    /// the resultant arcana of the fusion, and then finding the lowest
+    /// level persona above the average level of the ingredients + 1
+    ///
+    ///
     pub fn fuse<'a>(
         &self,
         rhs: &'a Self,
@@ -62,12 +61,11 @@ impl Persona {
         result_persona
     }
 
-    /**
-     * Returns a list of all possible forward fusions of a persona
-     *
-     * This returns the references of the other ingrdient and its
-     * corresponding result persona
-     */
+    /// Returns a list of all possible forward fusions of a persona
+    ///
+    /// This returns the references of the other ingrdient and its
+    /// corresponding result persona
+    ////
     pub fn find_all_forward_fusions<'a>(
         &self,
         persona_list: &'a Vec<Self>,
@@ -81,12 +79,11 @@ impl Persona {
         }
         forward_fusions
     }
-    /**
-     * Finds all recipes which creates a persona
-     *
-     * This is done by searching all arcana pairs that result in a persona, and then
-     * finding personas belonging to each pair that fuses into the result.
-     */
+    /// Finds all recipes which creates a persona
+    ///
+    /// This is done by searching all arcana pairs that result in a persona, and then
+    /// finding personas belonging to each pair that fuses into the result.
+    ///
     pub fn find_all_reverse_fusions<'a>(
         &self,
         persona_list: &'a Vec<Self>,
