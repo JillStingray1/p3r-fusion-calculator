@@ -1,5 +1,5 @@
 use std::collections::HashSet;
-use std::fmt::{Display, write};
+use std::fmt::Display;
 use std::ops::{Add, Sub};
 
 use crate::persona::arcana;
@@ -44,6 +44,10 @@ impl Arcana {
         .copied()
     }
 
+    pub fn as_usize(self) -> usize {
+        self as usize
+    }
+
     /// Gets the possible arcana combos in fusion that results in
     /// the arcana the method is called on
     pub fn get_possible_combos(self) -> HashSet<(Arcana, Arcana)> {
@@ -62,10 +66,15 @@ impl Arcana {
     }
 }
 
+impl Display for Arcana {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
+/// Implementation for the addition off arcanae in fusion
 macro_rules! define_arcana_ops {
     ($(($arc_1:ident, $arc_2:ident) => $arc_3:ident),* $(,)?) => {
-
-
         impl Add for Arcana {
             type Output = Self;
 
@@ -78,20 +87,6 @@ macro_rules! define_arcana_ops {
             }
         }
     };
-}
-
-impl Sub for Arcana {
-    type Output = Vec<Arcana>;
-
-    fn sub(self, rhs: Self) -> Self::Output {
-        let mut result = vec![];
-        for arcana in Arcana::iterator() {
-            if arcana + rhs == self {
-                result.push(arcana);
-            }
-        }
-        result
-    }
 }
 
 define_arcana_ops! {
@@ -180,4 +175,18 @@ define_arcana_ops! {
     (Empress, Sun) => Emperor,
     (Empress, Judgement) => Lovers,
     (Empress, Aeon) => Priestess,
+}
+
+impl Sub for Arcana {
+    type Output = Vec<Arcana>;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        let mut result = vec![];
+        for arcana in Arcana::iterator() {
+            if arcana + rhs == self {
+                result.push(arcana);
+            }
+        }
+        result
+    }
 }

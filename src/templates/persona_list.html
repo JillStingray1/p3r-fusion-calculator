@@ -23,6 +23,7 @@
     <tbody>
       {% for persona in persona_list %}
         <tr>
+          <td sorttable_customkey="{{ persona.arcana.as_usize() }}">{{ persona.arcana.to_string() }}</td>
           <td><a href="persona/{{persona.name}}">{{persona.name}}</a></td>
         </tr>
       {% endfor %}
