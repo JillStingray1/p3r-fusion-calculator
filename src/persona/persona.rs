@@ -116,7 +116,7 @@ impl Persona {
 #[cfg(test)]
 mod persona_tests {
     use super::*;
-
+    /// generates a small list of personae to test fusion with
     fn make_persona_list() -> Vec<Persona> {
         use Arcana::*;
         let orpheus = Persona {
@@ -155,6 +155,8 @@ mod persona_tests {
         vec![orpheus, nekomata, omoikane]
     }
 
+    /// tests the fusion of 2 personas
+    /// orpheus + nekomata = omoikane
     #[test]
     fn test_fuse() {
         let persona_db = make_persona_list();
@@ -162,6 +164,7 @@ mod persona_tests {
         assert_eq!(result.unwrap().name, persona_db[2].name);
     }
 
+    /// tests reverse fusion, omoikane can be fused from orpheus + nekomata
     #[test]
     fn test_reverse_fuse() {
         let persona_db = make_persona_list();
