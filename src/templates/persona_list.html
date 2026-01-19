@@ -11,13 +11,19 @@
   <h1>This is the home page</h1>
 
   <table class="sortable">
+      <th colspan="3"></th>
+      <th colspan="5">Stats</th>
+      <th colspan="9">Resistances</th>
     <thead>
       <tr>
         <th>Arcana</th>
         <th>Name</th>
         <th>Lvl</th>
-        <th colspan="5">Stats</th>
-        <th colspan="9">Resistances</th>
+        <th>St</th>
+        <th>Mg</th>
+        <th>En</th>
+        <th>Ag</th>
+        <th>Lu</th>
       </tr>
     </thead>
     <tbody>
@@ -25,6 +31,10 @@
         <tr>
           <td sorttable_customkey="{{ persona.arcana.as_usize() }}">{{ persona.arcana.to_string() }}</td>
           <td><a href="persona/{{persona.name}}">{{persona.name}}</a></td>
+          <td> {{persona.base_level}} </td>
+          {% for stat in persona.stats %}
+            <td>{{stat}}</td>
+          {% endfor %}
         </tr>
       {% endfor %}
     </tbody>
