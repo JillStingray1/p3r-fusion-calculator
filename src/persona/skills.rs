@@ -16,9 +16,7 @@ pub enum SkillType {
 }
 
 pub struct Skill {
-    skill_type: SkillType,
-    power: u32,
-    accuracy: u8,
-    crit_rate: u8,
-    description: String,
+    pub skill_type: SkillType,
+    pub name: String,
+    pub description: String,
 }
