@@ -7,6 +7,13 @@ use actix_web::{App, HttpServer};
 use create_db::make_persona_db;
 use routes::*;
 
+use crate::persona::{Persona, Skill};
+
+struct AppData {
+    persona_list: Vec<Persona>,
+    skill_list: Vec<Skill>,
+}
+
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {

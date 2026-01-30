@@ -1,7 +1,6 @@
 use std::rc::Rc;
 
-use super::arcana::Arcana;
-use super::skills::*;
+use super::*;
 
 /// The `Persona`` struct contains relevant details for individual personas
 ///

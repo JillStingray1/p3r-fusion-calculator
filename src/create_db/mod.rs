@@ -1,10 +1,6 @@
 use std::rc::Rc;
 
-use crate::persona::{
-    arcana::Arcana,
-    persona::Persona,
-    skills::{Skill, SkillType},
-};
+use crate::persona::{Arcana, Persona, Skill, SkillType};
 
 pub fn make_persona_db() -> Vec<Persona> {
     // for now this is a stub function that gives an example of what the persona_list will look like
