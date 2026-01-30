@@ -1,8 +1,18 @@
-use crate::persona;
+use std::rc::Rc;
 
 use super::arcana::Arcana;
 use super::skills::*;
 
+/// The `Persona`` struct contains relevant details for individual personas
+///
+/// ### Fields
+///
+/// `name`: A `String` that contains the name of the persona
+/// `arcana`: the `Arcana` that the persona belongs to
+/// `special_recipe`: a `bool` that indicates if the persona is fused through special fusio
+/// `affinities`: a persona's affinities, which indicates its weaknesses and resistances
+/// `inheritance`: TODO maybe change this to a proper enum
+/// `skills`: A `Vec` that contains a tuple, who's first element is a Skill that the persona learns, and
 pub struct Persona {
     pub name: String,
     pub arcana: Arcana,
@@ -10,7 +20,7 @@ pub struct Persona {
     pub special_recipe: bool,
     pub affinities: [u8; 10],
     pub inheritance: Vec<SkillType>,
-    pub skills: Vec<(Skill, u8)>,
+    pub skills: Vec<(Rc<Skill>, u8)>,
     pub cost: u32,
     pub stats: [u8; 5],
 }

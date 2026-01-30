@@ -1,4 +1,4 @@
-use crate::persona::persona::Persona;
+use crate::persona::{persona::Persona, skills::SkillType};
 pub use askama::Template;
 
 #[derive(Template)]
@@ -8,4 +8,11 @@ pub use askama::Template;
 /// such as stats, resistances, name and arcana in a sorted table
 pub struct PersonaListTemplate<'a> {
     pub persona_list: &'a Vec<Persona>,
+}
+
+#[derive(Template)]
+#[template(path = "persona.html")]
+pub struct PersonaTemplate<'a> {
+    pub persona: &'a Persona,
+    pub affinities: Vec<SkillType>,
 }

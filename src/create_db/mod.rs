@@ -1,3 +1,5 @@
+use std::rc::Rc;
+
 use crate::persona::{
     arcana::Arcana,
     persona::Persona,
@@ -15,11 +17,11 @@ pub fn make_persona_db() -> Vec<Persona> {
         affinities: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         inheritance: vec![],
         skills: vec![(
-            Skill {
+            Rc::new(Skill {
                 skill_type: SkillType::Fire,
                 name: String::from("Agi"),
                 description: String::from("Weak fire damage to one enemy"),
-            },
+            }),
             0,
         )],
         cost: 0,
