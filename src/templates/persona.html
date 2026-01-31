@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/css/general.css">
     <title>{{ persona.name }}</title>
 </head>
 <body>
@@ -11,13 +12,44 @@
     <h3>Resistances</h3>
     <table>
         <tr>
-                {% for affinity in affinities %}
-                    <th>{{ affinity.to_string() }}</th>
-                {% endfor %}
+            <th>Slash</th>
+            <th>Strike</th>
+            <th>Pierce</th>
+            <th>Fire</th>
+            <th>Ice</th>
+            <th>Elec</th>
+            <th>Wind</th>
+            <th>Dark</th>
+            <th>Light</th>
+            <th>Almighty</th>
         </tr>
-
+        <tr>
+            {% for resistances in persona.affinities %}
+            <td>{{ resistances }}</td>
+            {% endfor %}
+        </tr>
     </table>
-    <table></table>
-    <table></table>
+    <h3>Stats</h3>
+    <table>
+        <tr>
+            <th>St</th>
+            <th>Mg</th>
+            <th>En</th>
+            <th>Ag</th>
+            <th>Lu</th>
+        </tr>
+        <tr>
+            {% for stat in persona.stats %}
+            <td>{{stat}}</td>
+            {% endfor %}
+        </tr>
+    </table>
+    <table>
+        {% for skill in persona.skills %}
+        <td>{{ skill.0.name }}</td>
+        <td>{{ skill.0.description }}</td>
+        <td>{{ skill.1 }}</td>
+        {% endfor %}
+    </table>
 </body>
 </html>

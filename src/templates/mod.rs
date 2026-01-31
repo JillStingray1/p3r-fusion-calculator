@@ -14,5 +14,4 @@ pub struct PersonaListTemplate<'a> {
 #[template(path = "persona.html")]
 pub struct PersonaTemplate<'a> {
     pub persona: &'a Persona,
-    pub affinities: Vec<SkillType>,
 }

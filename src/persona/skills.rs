@@ -19,12 +19,6 @@ pub enum SkillType {
     Almighty,
 }
 
-impl Display for SkillType {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{:?}", self)
-    }
-}
-
 ///
 impl SkillType {
     pub fn iterator() -> impl Iterator<Item = SkillType> {
