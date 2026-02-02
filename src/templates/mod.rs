@@ -1,4 +1,4 @@
-use crate::persona::{persona::Persona, skills::SkillType};
+use crate::persona::{Recipes, persona::Persona};
 pub use askama::Template;
 
 #[derive(Template)]
@@ -15,5 +15,5 @@ pub struct PersonaListTemplate<'a> {
 pub struct PersonaTemplate<'a> {
     pub persona: &'a Persona,
     pub forward_fusions: Vec<(&'a Persona, &'a Persona)>,
-    pub special_fusion: Option<Vec<&'a Persona>>,
+    pub reverse_fusions: Recipes<'a>,
 }
