@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel="stylesheet" href="static/css/general.css">
+  <link rel="stylesheet" href="//cdn.datatables.net/2.3.6/css/dataTables.dataTables.min.css">
+  <script
+			  src="https://code.jquery.com/jquery-4.0.0.slim.min.js"
+			  integrity="sha256-8DGpv13HIm+5iDNWw1XqxgFB4mj+yOKFNb+tHBZOowc="
+			  crossorigin="anonymous"></script>
+  <script src="//cdn.datatables.net/2.3.6/js/dataTables.min.js"></script>
+  <script src="/static/javascript/persona_list.js"></script>
+  <title>List of Personas</title>
+</head>
+<body>
+  <h1>This is the home page</h1>
+
+  <table class="display" id="persona_table">
+    <thead>
+      <tr data-dt-order="disable">
+        <th colspan="3">Persona</th>
+        <th colspan="5">Stats</th>
+        <!-- <th colspan="9">Resistances</th> -->
+      </tr>
+      <tr>
+        <th>Arcana</th>
+        <th>Name</th>
+        <th>Lvl</th>
+        <th>St</th>
+        <th>Mg</th>
+        <th>En</th>
+        <th>Ag</th>
+        <th>Lu</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for persona in persona_list %}
+        <tr>
+          <td data-order="{{ persona.arcana.as_usize() }}">{{ persona.arcana.to_string() }}</td>
+          <td><b><a href="persona/{{persona.name}}">{{persona.name}}</a></b></td>
+          <td> {{persona.base_level}} </td>
+          {% for stat in persona.stats %}
+            <td>{{stat}}</td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</body>
+</html>

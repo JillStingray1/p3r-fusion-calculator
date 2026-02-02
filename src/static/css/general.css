@@ -1,0 +1,30 @@
+@font-face {
+    font-family: Biolinum;
+    src: url("/static/fonts/LinBiolinum_R.otf") format('opentype');
+} 
+
+@font-face {
+    font-family: Biolinum;
+    src: url("/static/fonts/LinBiolinum_RB.otf") format('opentype');
+    font-weight: bold;
+} 
+
+@font-face {
+    font-family: Biolinum;
+    src: url("/static/fonts/LinBiolinum_RB.otf") format('opentype');
+    font-style: italic;
+} 
+
+body {
+    background-color: #0e54a3;
+    font-family: Biolinum;
+}
+
+h1 {
+    color: #51eefc;
+}
+
+
+p, table {
+    color: #51eefc;
+}

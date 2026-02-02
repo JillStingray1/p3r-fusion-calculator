@@ -1,3 +1,7 @@
+use std::fmt::Display;
+
+/// enum that contains all the skill elements
+#[derive(Copy, Clone, Debug)]
 pub enum SkillType {
     Slash,
     Strike,
@@ -15,10 +19,21 @@ pub enum SkillType {
     Almighty,
 }
 
+///
+impl SkillType {
+    pub fn iterator() -> impl Iterator<Item = SkillType> {
+        use SkillType::*;
+        [
+            Slash, Strike, Pierce, Fire, Ice, Elec, Wind, Dark, Light, Healing,
+            Support, Ailment, Passive, Almighty,
+        ]
+        .iter()
+        .copied()
+    }
+}
+
 pub struct Skill {
-    skill_type: SkillType,
-    power: u32,
-    accuracy: u8,
-    crit_rate: u8,
-    description: String,
+    pub skill_type: SkillType,
+    pub name: String,
+    pub description: String,
 }
