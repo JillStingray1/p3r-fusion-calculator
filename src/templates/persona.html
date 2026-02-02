@@ -29,6 +29,7 @@
             {% endfor %}
         </tr>
     </table>
+
     <h3>Stats</h3>
     <table>
         <tr>
@@ -44,12 +45,22 @@
             {% endfor %}
         </tr>
     </table>
+
+    <h3>Skills</h3>
     <table>
         {% for skill in persona.skills %}
         <td>{{ skill.0.name }}</td>
         <td>{{ skill.0.description }}</td>
         <td>{{ skill.1 }}</td>
         {% endfor %}
+    </table>
+
+    <h4>Reverse Fusions</h4>
+    <h4>Forward Fusions</h4>
+
+    <table id="forward-fusions">
+        
+
     </table>
 </body>
 </html>

@@ -24,6 +24,17 @@ pub struct Persona {
     pub stats: [u8; 5],
 }
 
+/// Enum for representing a persona's possible recipes
+///
+/// Either a persona is fusable through normal fusion, or it is fused through
+/// special fusion. Normal fusion personas can have many possible recipies consisting
+/// of 2 personas, whist special fusion can only have 1 fixed recipe consisting of any
+/// number of personas
+pub enum Recipes<'a> {
+    Normal(Vec<(&'a Persona, &'a Persona)>),
+    Special(Vec<&'a Persona>),
+}
+
 impl Persona {
     /// Gets the result of a fusion between 2 personae.
     ///
@@ -88,17 +99,18 @@ impl Persona {
         }
         forward_fusions
     }
-    /// Finds all recipes which creates a persona
+    /// Finds all recipes which creates the persona that this is called on
     ///
     /// This is done by searching all arcana pairs that result in a persona, and then
     /// finding personas belonging to each pair that fuses into the result.
     ///
     pub fn find_all_reverse_fusions<'a>(
-        &self,
+        &'a self,
         persona_list: &'a Vec<Self>,
-    ) -> Option<Vec<(&'a Self, &'a Self)>> {
+    ) -> Recipes {
+        use Recipes::*;
         if self.special_recipe {
-            None
+            Special(vec![])
         } else {
             let mut reverse_fusions = vec![];
             let fusion_pairs = self.arcana.get_possible_combos();
@@ -117,13 +129,16 @@ impl Persona {
                     }
                 }
             }
-            return Some(reverse_fusions);
+            return Normal(reverse_fusions);
         }
     }
 }
 
 #[cfg(test)]
 mod persona_tests {
+    use core::panic;
+    use std::result;
+
     use super::*;
     /// generates a small list of personae to test fusion with
     fn make_persona_list() -> Vec<Persona> {
@@ -176,13 +191,15 @@ mod persona_tests {
     /// tests reverse fusion, omoikane can be fused from orpheus + nekomata
     #[test]
     fn test_reverse_fuse() {
+        use Recipes::*;
         let persona_db = make_persona_list();
-        let result =
-            persona_db[2].find_all_reverse_fusions(&persona_db).unwrap();
-
-        assert_eq!(
-            (&result[0].0.name, &result[0].1.name),
-            (&persona_db[0].name, &persona_db[1].name)
-        )
+        let result = persona_db[2].find_all_reverse_fusions(&persona_db);
+        match result {
+            Normal(result) => assert_eq!(
+                (&result[0].0.name, &result[0].1.name),
+                (&persona_db[0].name, &persona_db[1].name)
+            ),
+            _ => panic!("Omoikane should be fused from normal recipes."),
+        }
     }
 }

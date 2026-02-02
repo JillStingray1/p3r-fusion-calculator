@@ -46,6 +46,10 @@ pub async fn persona_details(
     }
     let template = PersonaTemplate {
         persona: target_persona.unwrap(),
+        forward_fusions: target_persona
+            .unwrap()
+            .find_all_forward_fusions(&data.persona_list),
+        special_fusion: None,
     };
     HttpResponse::Ok().body(template.render().unwrap())
 }

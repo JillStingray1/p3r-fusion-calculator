@@ -14,4 +14,6 @@ pub struct PersonaListTemplate<'a> {
 #[template(path = "persona.html")]
 pub struct PersonaTemplate<'a> {
     pub persona: &'a Persona,
+    pub forward_fusions: Vec<(&'a Persona, &'a Persona)>,
+    pub special_fusion: Option<Vec<&'a Persona>>,
 }
