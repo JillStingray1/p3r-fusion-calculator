@@ -1,4 +1,4 @@
-use crate::persona::{Recipes, persona::Persona};
+use crate::persona::{Recipes, Recipes::*, persona::Persona};
 pub use askama::Template;
 
 #[derive(Template)]
