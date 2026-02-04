@@ -1,6 +1,6 @@
-use std::{collections::HashMap, fs::File, io::Read, rc::Rc};
-
 use crate::persona::{Arcana, Persona, Skill, SkillType};
+use serde_json::{Value, from_str};
+use std::{collections::HashMap, fs::File, io::Read, rc::Rc};
 
 pub fn make_persona_db() -> Vec<Persona> {
     // for now this is a stub function that gives an example of what the persona_list will look like
@@ -99,5 +99,7 @@ pub fn make_persona_list() -> HashMap<String, Persona> {
         .expect("No file found at persona_data/demon-data.json.")
         .read_to_string(&mut contents)
         .expect("Failed to read demon-data.json file");
+    let json: Value = from_str(&contents)
+        .expect("persona_data/demon-data.json is not properly formatted");
     todo!()
 }
