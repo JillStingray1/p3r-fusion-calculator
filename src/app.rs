@@ -1,8 +1,7 @@
 use crate::persona::{Persona, Skill};
 use crate::templates::*;
-use crate::{make_persona_db, persona};
 use actix_web::web;
-use actix_web::{HttpRequest, HttpResponse, Responder, get, post, web::Path};
+use actix_web::{HttpRequest, HttpResponse, Responder, get, web::Path};
 
 pub struct AppData {
     pub persona_list: Vec<Persona>,
@@ -14,10 +13,7 @@ pub struct AppData {
 /// This displays details for each persona
 /// such as their names, arcana, stats and resistances
 #[get("/persona_list")]
-pub async fn persona_list(
-    req: HttpRequest,
-    data: web::Data<AppData>,
-) -> impl Responder {
+pub async fn persona_list(data: web::Data<AppData>) -> impl Responder {
     let template = PersonaListTemplate {
         persona_list: &data.persona_list,
     };

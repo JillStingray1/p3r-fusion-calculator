@@ -1,5 +1,3 @@
-
-### Skills
 #### Sla Skills
 | Rank | Name | Cost | Target | Power | Hits | Acc | Crit | Mod | Description | Upgrade | Limit |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
