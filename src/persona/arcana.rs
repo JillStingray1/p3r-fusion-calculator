@@ -50,8 +50,8 @@ impl Arcana {
         self as usize
     }
 
-    /// Converts strings into Arcana
-    pub fn from_string(str: &str) -> Self {
+    /// Converts &str into Arcana
+    pub fn from_str(str: &str) -> Self {
         use Arcana::*;
         match str {
             "Fool" => Fool,

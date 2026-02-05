@@ -1,6 +1,6 @@
-use std::rc::Rc;
-
 use super::*;
+use serde_json::Value;
+use std::{collections::HashMap, rc::Rc};
 
 /// The `Persona`` struct contains relevant details for individual personas
 ///
@@ -17,10 +17,10 @@ pub struct Persona {
     pub arcana: Arcana,
     pub base_level: u8,
     pub special_recipe: bool,
-    pub affinities: [u8; 10],
+    pub affinities: [char; 10],
     pub inheritance: Vec<SkillType>,
     pub skills: Vec<(Rc<Skill>, u8)>,
-    pub cost: u32,
+    pub cost: u64,
     pub stats: [u8; 5],
 }
 
@@ -36,6 +36,80 @@ pub enum Recipes<'a> {
 }
 
 impl Persona {
+    /// converts a json strucuture that stores the a persona in demon-data.json into a persona
+    pub fn from_json(
+        persona_name: &String,
+        skill_list: &HashMap<String, Skill>,
+        persona_data: Value,
+    ) -> Self {
+        let arcana = Arcana::from_str(
+            persona_data
+                .get("race")
+                .expect("No race/arcana stored for persona")
+                .as_str()
+                .expect("Arcana is not stored as string"),
+        );
+        let base_level = u8::try_from(
+            persona_data
+                .get("lvl")
+                .expect("No level found for persona")
+                .as_u64()
+                .expect("Value was not a number"),
+        )
+        .expect("Base level was too large");
+        let affinities = persona_data
+            .get("race")
+            .expect("No race/arcana stored for persona")
+            .as_str()
+            .expect("Arcana is not stored as string")
+            .chars()
+            .collect::<Vec<_>>()
+            .try_into()
+            .unwrap();
+        let skill_map = persona_data
+            .get("skills")
+            .expect("Skills not formatted properly")
+            .as_object()
+            .expect("Skills not formatted properly");
+        let mut skills = vec![];
+        for (skill_name, value) in skill_map {
+            let learned_level = if value.as_f64().unwrap() < 1.0 {
+                0
+            } else {
+                u8::try_from(value.as_u64().unwrap()).unwrap()
+            };
+            // skills.push((Rc::new(skill_list[skill_name]), learned_level));
+        }
+        let mut stats = [0; 5];
+        let mut stats_sum = 0;
+        let stats_array = persona_data
+            .get("stats")
+            .expect("Stats not found")
+            .as_array()
+            .expect("stats not formated properly");
+        if stats_array.len() != 5 {
+            panic!("There are more or less than 5 stats provided");
+        };
+        for ind in 0..5 {
+            let stat = stats_array[ind]
+                .as_u64()
+                .expect("stat is not a positive number");
+            stats[ind] = u8::try_from(stat).expect("");
+            stats_sum += stat
+        }
+        Persona {
+            name: persona_name.clone(),
+            arcana,
+            base_level,
+            affinities,
+            special_recipe: false,
+            inheritance: vec![],
+            cost: 2000 + stats_sum.pow(2),
+            skills,
+            stats,
+        }
+    }
+
     /// Gets the result of a fusion between 2 personae.
     ///
     /// This is determined by the using the fusion table to determine
@@ -149,7 +223,11 @@ mod persona_tests {
             arcana: Fool,
             base_level: 1,
             special_recipe: false,
-            affinities: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            affinities: "---s-w--w-"
+                .chars()
+                .collect::<Vec<_>>()
+                .try_into()
+                .unwrap(),
             inheritance: vec![],
             skills: vec![],
             cost: 0,
@@ -160,7 +238,11 @@ mod persona_tests {
             arcana: Magician,
             base_level: 3,
             special_recipe: false,
-            affinities: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            affinities: "---s-w--w-"
+                .chars()
+                .collect::<Vec<_>>()
+                .try_into()
+                .unwrap(),
             inheritance: vec![],
             skills: vec![],
             cost: 0,
@@ -171,7 +253,11 @@ mod persona_tests {
             arcana: Hierophant,
             base_level: 7,
             special_recipe: false,
-            affinities: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            affinities: "---s-w--w-"
+                .chars()
+                .collect::<Vec<_>>()
+                .try_into()
+                .unwrap(),
             inheritance: vec![],
             skills: vec![],
             cost: 0,

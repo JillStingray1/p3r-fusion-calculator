@@ -5,30 +5,32 @@ use std::{collections::HashMap, fs::File, io::Read, rc::Rc};
 pub fn make_persona_db() -> Vec<Persona> {
     // for now this is a stub function that gives an example of what the persona_list will look like
     use Arcana::*;
+    use Arcana::*;
     let orpheus = Persona {
         name: String::from("Orpheus"),
         arcana: Fool,
         base_level: 1,
         special_recipe: false,
-        affinities: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        affinities: "---s-w--w-"
+            .chars()
+            .collect::<Vec<_>>()
+            .try_into()
+            .unwrap(),
         inheritance: vec![],
-        skills: vec![(
-            Rc::new(Skill {
-                skill_type: SkillType::Fire,
-                name: String::from("Agi"),
-                description: String::from("Weak fire damage to one enemy"),
-            }),
-            0,
-        )],
+        skills: vec![],
         cost: 0,
-        stats: [2, 2, 2, 2, 2],
+        stats: [0, 0, 0, 0, 0],
     };
     let nekomata = Persona {
         name: String::from("Nekomata"),
         arcana: Magician,
         base_level: 3,
         special_recipe: false,
-        affinities: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        affinities: "---s-w--w-"
+            .chars()
+            .collect::<Vec<_>>()
+            .try_into()
+            .unwrap(),
         inheritance: vec![],
         skills: vec![],
         cost: 0,
@@ -39,7 +41,11 @@ pub fn make_persona_db() -> Vec<Persona> {
         arcana: Hierophant,
         base_level: 7,
         special_recipe: false,
-        affinities: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        affinities: "---s-w--w-"
+            .chars()
+            .collect::<Vec<_>>()
+            .try_into()
+            .unwrap(),
         inheritance: vec![],
         skills: vec![],
         cost: 0,
@@ -102,10 +108,7 @@ pub fn make_persona_list() -> HashMap<String, Persona> {
     let json: Value = from_str(&contents)
         .expect("persona_data/demon-data.json is not properly formatted");
     let map = json.as_object().expect("failed to create map from json");
-    for (persona_name, persona) in map {
-        println!("{:?}", persona.get("race"));
-        // Persona { name: key.clone(), arcana: };
-    }
+    for (persona_name, persona) in map {}
 
     todo!()
 }
