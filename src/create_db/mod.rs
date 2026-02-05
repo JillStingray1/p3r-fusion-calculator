@@ -1,4 +1,4 @@
-use crate::persona::{Persona, Skill, SkillType};
+use crate::persona_data::{Persona, Skill, SkillType};
 use serde_json::{Value, from_str};
 use std::{collections::HashMap, fs::File, io::Read};
 

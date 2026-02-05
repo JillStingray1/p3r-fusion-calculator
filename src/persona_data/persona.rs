@@ -39,7 +39,7 @@ pub enum Recipes<'a> {
 impl Persona {
     /// converts a json strucuture that stores the a persona in demon-data.json into a persona
     pub fn from_json(
-        persona_name: &String,
+        persona_name: &str,
         // skill_list: &HashMap<String, Skill>,
         persona_data: &Value,
     ) -> Self {
@@ -77,10 +77,7 @@ impl Persona {
             let learned_level = if value.as_f64().unwrap() < 1.0 {
                 0
             } else {
-                match u8::try_from(value.as_u64().unwrap()) {
-                    Ok(x) => x,
-                    Err(_) => 100, // case for theurgies, which are learnt at 5271
-                }
+                u8::try_from(value.as_u64().unwrap()).unwrap_or(100)
             };
             skills.push((skill_name.clone(), learned_level));
         }
@@ -102,7 +99,7 @@ impl Persona {
             stats_sum += stat
         }
         Persona {
-            name: persona_name.clone(),
+            name: persona_name.to_string(),
             arcana,
             base_level,
             affinities,
@@ -132,7 +129,7 @@ impl Persona {
         if fused_arcana != self.arcana {
             let fused_level = (self.base_level + rhs.base_level) / 2 + 1;
             let mut result_level = 99;
-            for (_, persona) in persona_list {
+            for persona in persona_list.values() {
                 if (persona.arcana == fused_arcana)
                     && (persona.base_level >= fused_level)
                     && (persona.base_level < result_level)
@@ -145,7 +142,7 @@ impl Persona {
         } else {
             let fused_level = (self.base_level + rhs.base_level) / 2 - 1;
             let mut result_level = 0;
-            for (_, persona) in persona_list {
+            for persona in persona_list.values() {
                 if (persona.arcana == fused_arcana)
                     && (persona.base_level <= fused_level)
                     && (persona.base_level > result_level)
@@ -168,10 +165,9 @@ impl Persona {
         persona_list: &'a HashMap<String, Self>,
     ) -> Vec<(&'a Self, &'a Self)> {
         let mut forward_fusions = vec![];
-        for (_, persona) in persona_list {
-            match self.fuse(persona, persona_list) {
-                Some(x) => forward_fusions.push((persona, x)),
-                None => (),
+        for persona in persona_list.values() {
+            if let Some(x) = self.fuse(persona, persona_list) {
+                forward_fusions.push((persona, x))
             }
         }
         forward_fusions
@@ -193,8 +189,8 @@ impl Persona {
             let mut reverse_fusions = vec![];
             let fusion_pairs = self.arcana.get_possible_combos();
             for (arcana_1, arcana_2) in fusion_pairs {
-                for (_, persona_1) in persona_list {
-                    for (_, persona_2) in persona_list {
+                for persona_1 in persona_list.values() {
+                    for persona_2 in persona_list.values() {
                         if (persona_1.arcana == arcana_1)
                             && (persona_2.arcana == arcana_2)
                             && (match persona_1.fuse(persona_2, persona_list) {
@@ -207,7 +203,7 @@ impl Persona {
                     }
                 }
             }
-            return Normal(reverse_fusions);
+            Normal(reverse_fusions)
         }
     }
 }
@@ -280,7 +276,7 @@ mod persona_tests {
         let result = persona_db
             .get("Orpheus")
             .unwrap()
-            .fuse(&persona_db.get("Nekomata").unwrap(), &persona_db);
+            .fuse(persona_db.get("Nekomata").unwrap(), &persona_db);
         assert_eq!(
             result.unwrap().name,
             persona_db.get("Omoikane").unwrap().name

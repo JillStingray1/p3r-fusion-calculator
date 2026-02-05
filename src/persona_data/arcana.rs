@@ -2,8 +2,6 @@ use std::collections::HashSet;
 use std::fmt::Display;
 use std::ops::{Add, Sub};
 
-use crate::persona::arcana;
-
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd, Eq, Hash)]
 pub enum Arcana {
     Fool,
@@ -99,7 +97,7 @@ impl Arcana {
 
 impl Display for Arcana {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{:?}", self)
+        write!(f, "{self:?}")
     }
 }
 

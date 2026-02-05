@@ -1,4 +1,4 @@
-use crate::persona::{Persona, Skill};
+use crate::persona_data::{Persona, Skill};
 use crate::templates::*;
 use actix_web::web;
 use actix_web::{HttpResponse, Responder, get, web::Path};

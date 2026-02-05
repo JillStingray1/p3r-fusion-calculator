@@ -1,6 +1,6 @@
 mod app;
 mod create_db;
-mod persona;
+mod persona_data;
 mod templates;
 use actix_files::Files;
 use actix_web::{App, HttpServer, web::Data};
