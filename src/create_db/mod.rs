@@ -1,57 +1,6 @@
-use crate::persona::{self, Arcana, Persona, Skill, SkillType};
+use crate::persona::{Persona, Skill, SkillType};
 use serde_json::{Value, from_str};
-use std::{collections::HashMap, fs::File, io::Read, rc::Rc};
-
-pub fn make_persona_db() -> Vec<Persona> {
-    // for now this is a stub function that gives an example of what the persona_list will look like
-    use Arcana::*;
-    let orpheus = Persona {
-        name: String::from("Orpheus"),
-        arcana: Fool,
-        base_level: 1,
-        special_recipe: false,
-        affinities: "---s-w--w-"
-            .chars()
-            .collect::<Vec<_>>()
-            .try_into()
-            .unwrap(),
-        inheritance: vec![],
-        skills: vec![],
-        cost: 0,
-        stats: [0, 0, 0, 0, 0],
-    };
-    let nekomata = Persona {
-        name: String::from("Nekomata"),
-        arcana: Magician,
-        base_level: 3,
-        special_recipe: false,
-        affinities: "---s-w--w-"
-            .chars()
-            .collect::<Vec<_>>()
-            .try_into()
-            .unwrap(),
-        inheritance: vec![],
-        skills: vec![],
-        cost: 0,
-        stats: [0, 0, 0, 0, 0],
-    };
-    let omoikane = Persona {
-        name: String::from("Omoikane"),
-        arcana: Hierophant,
-        base_level: 7,
-        special_recipe: false,
-        affinities: "---s-w--w-"
-            .chars()
-            .collect::<Vec<_>>()
-            .try_into()
-            .unwrap(),
-        inheritance: vec![],
-        skills: vec![],
-        cost: 0,
-        stats: [0, 0, 0, 0, 0],
-    };
-    vec![orpheus, nekomata, omoikane]
-}
+use std::{collections::HashMap, fs::File, io::Read};
 
 fn split_string(string: String, splitter: &str) -> Vec<String> {
     string
