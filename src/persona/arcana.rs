@@ -44,8 +44,39 @@ impl Arcana {
         .copied()
     }
 
+    /// Converts a Arcana enum into a number corresponding to their position in persona tarot
+    /// (for sorting purposes)
     pub fn as_usize(self) -> usize {
         self as usize
+    }
+
+    /// Converts strings into Arcana
+    pub fn from_string(str: &str) -> Self {
+        use Arcana::*;
+        match str {
+            "Fool" => Fool,
+            "Magician" => Magician,
+            "Priestess" => Priestess,
+            "Empress" => Empress,
+            "Emperor" => Emperor,
+            "Hierophant" => Hierophant,
+            "Lovers" => Lovers,
+            "Chariot" => Chariot,
+            "Justice" => Justice,
+            "Hermit" => Hermit,
+            "Fortune" => Fortune,
+            "Strength" => Strength,
+            "Hanged" => HangedMan,
+            "Death" => Death,
+            "Temperance" => Temperance,
+            "Devil" => Devil,
+            "Tower" => Tower,
+            "Star" => Star,
+            "Moon" => Moon,
+            "Sun" => Sun,
+            "Judgement" => Judgement,
+            _ => Aeon,
+        }
     }
 
     /// Gets the possible arcana combos in fusion that results in

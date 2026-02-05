@@ -1,4 +1,4 @@
-use crate::persona::{Arcana, Persona, Skill, SkillType};
+use crate::persona::{self, Arcana, Persona, Skill, SkillType};
 use serde_json::{Value, from_str};
 use std::{collections::HashMap, fs::File, io::Read, rc::Rc};
 
@@ -101,5 +101,11 @@ pub fn make_persona_list() -> HashMap<String, Persona> {
         .expect("Failed to read demon-data.json file");
     let json: Value = from_str(&contents)
         .expect("persona_data/demon-data.json is not properly formatted");
+    let map = json.as_object().expect("failed to create map from json");
+    for (persona_name, persona) in map {
+        println!("{:?}", persona.get("race"));
+        // Persona { name: key.clone(), arcana: };
+    }
+
     todo!()
 }
