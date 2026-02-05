@@ -1,7 +1,7 @@
-use crate::persona::{self, Persona, Skill};
+use crate::persona::{Persona, Skill};
 use crate::templates::*;
 use actix_web::web;
-use actix_web::{HttpRequest, HttpResponse, Responder, get, web::Path};
+use actix_web::{HttpResponse, Responder, get, web::Path};
 use std::collections::HashMap;
 
 pub struct AppData {
@@ -35,7 +35,7 @@ pub async fn persona_details(
     data: web::Data<AppData>,
 ) -> impl Responder {
     let persona_name = path.into_inner();
-    let mut searched_persona: Option<&Persona> =
+    let searched_persona: Option<&Persona> =
         data.persona_list.get(&persona_name);
     match searched_persona {
         Some(found_persona) => {
@@ -46,6 +46,7 @@ pub async fn persona_details(
                     learned_level,
                 ));
             }
+            skill_list.sort_by(|x, y| x.1.cmp(y.1));
             let template = PersonaTemplate {
                 persona: found_persona,
                 forward_fusions: found_persona
