@@ -1,6 +1,6 @@
 use super::*;
 use serde_json::Value;
-use std::{collections::HashMap, rc::Rc};
+use std::collections::HashMap;
 
 /// The `Persona`` struct contains relevant details for individual personas
 ///
@@ -82,7 +82,7 @@ impl Persona {
                     Err(_) => 100, // case for theurgies, which are learnt at 5271
                 }
             };
-            // skills.push((Rc::new(skill_list[skill_name]), learned_level));
+            skills.push((skill_name.clone(), learned_level));
         }
         let mut stats = [0; 5];
         let mut stats_sum = 0;

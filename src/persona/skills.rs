@@ -41,6 +41,7 @@ impl SkillType {
             "Fir Skills" => Fire,
             "Ice Skills" => Ice,
             "Win Skills" => Wind,
+            "Ele Skills" => Elec,
             "Lig Skills" => Light,
             "Dar Skills" => Dark,
             "Alm Skills" => Almighty,
