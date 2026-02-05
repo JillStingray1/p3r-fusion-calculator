@@ -20,7 +20,7 @@ pub struct Persona {
     pub special_recipe: bool,
     pub affinities: [char; 10],
     pub inheritance: Vec<SkillType>,
-    pub skills: Vec<(Rc<Skill>, u8)>,
+    pub skills: Vec<(String, u8)>,
     pub cost: u64,
     pub stats: [u8; 5],
 }
@@ -124,7 +124,7 @@ impl Persona {
     pub fn fuse<'a>(
         &self,
         rhs: &'a Self,
-        persona_list: &'a Vec<Self>,
+        persona_list: &'a HashMap<String, Self>,
     ) -> Option<&'a Self> {
         let fused_arcana = self.arcana + rhs.arcana;
 
@@ -132,7 +132,7 @@ impl Persona {
         if fused_arcana != self.arcana {
             let fused_level = (self.base_level + rhs.base_level) / 2 + 1;
             let mut result_level = 99;
-            for persona in persona_list {
+            for (_, persona) in persona_list {
                 if (persona.arcana == fused_arcana)
                     && (persona.base_level >= fused_level)
                     && (persona.base_level < result_level)
@@ -145,7 +145,7 @@ impl Persona {
         } else {
             let fused_level = (self.base_level + rhs.base_level) / 2 - 1;
             let mut result_level = 0;
-            for persona in persona_list {
+            for (_, persona) in persona_list {
                 if (persona.arcana == fused_arcana)
                     && (persona.base_level <= fused_level)
                     && (persona.base_level > result_level)
@@ -166,10 +166,10 @@ impl Persona {
     ////
     pub fn find_all_forward_fusions<'a>(
         &self,
-        persona_list: &'a Vec<Self>,
+        persona_list: &'a HashMap<String, Self>,
     ) -> Vec<(&'a Self, &'a Self)> {
         let mut forward_fusions = vec![];
-        for persona in persona_list {
+        for (_, persona) in persona_list {
             match self.fuse(persona, persona_list) {
                 Some(x) => forward_fusions.push((persona, x)),
                 None => (),
@@ -184,7 +184,7 @@ impl Persona {
     ///
     pub fn find_all_reverse_fusions<'a>(
         &'a self,
-        persona_list: &'a Vec<Self>,
+        persona_list: &'a HashMap<String, Self>,
     ) -> Recipes {
         use Recipes::*;
         if self.special_recipe {
@@ -194,8 +194,8 @@ impl Persona {
             let mut reverse_fusions = vec![];
             let fusion_pairs = self.arcana.get_possible_combos();
             for (arcana_1, arcana_2) in fusion_pairs {
-                for persona_1 in persona_list {
-                    for persona_2 in persona_list {
+                for (_, persona_1) in persona_list {
+                    for (_, persona_2) in persona_list {
                         if (persona_1.arcana == arcana_1)
                             && (persona_2.arcana == arcana_2)
                             && (match persona_1.fuse(persona_2, persona_list) {
@@ -216,11 +216,10 @@ impl Persona {
 #[cfg(test)]
 mod persona_tests {
     use core::panic;
-    use std::result;
 
     use super::*;
     /// generates a small list of personae to test fusion with
-    fn make_persona_list() -> Vec<Persona> {
+    fn make_persona_list() -> HashMap<String, Persona> {
         use Arcana::*;
         let orpheus = Persona {
             name: String::from("Orpheus"),
@@ -267,7 +266,11 @@ mod persona_tests {
             cost: 0,
             stats: [0, 0, 0, 0, 0],
         };
-        vec![orpheus, nekomata, omoikane]
+        HashMap::from([
+            (String::from("Orpheus"), orpheus),
+            (String::from("Nekomata"), nekomata),
+            (String::from("Omoikane"), omoikane),
+        ])
     }
 
     /// tests the fusion of 2 personas
@@ -275,8 +278,14 @@ mod persona_tests {
     #[test]
     fn test_fuse() {
         let persona_db = make_persona_list();
-        let result = persona_db[0].fuse(&persona_db[1], &persona_db);
-        assert_eq!(result.unwrap().name, persona_db[2].name);
+        let result = persona_db
+            .get("Orpheus")
+            .unwrap()
+            .fuse(&persona_db.get("Nekomata").unwrap(), &persona_db);
+        assert_eq!(
+            result.unwrap().name,
+            persona_db.get("Omoikane").unwrap().name
+        );
     }
 
     /// tests reverse fusion, omoikane can be fused from orpheus + nekomata
@@ -284,11 +293,17 @@ mod persona_tests {
     fn test_reverse_fuse() {
         use Recipes::*;
         let persona_db = make_persona_list();
-        let result = persona_db[2].find_all_reverse_fusions(&persona_db);
+        let result = persona_db
+            .get("Omoikane")
+            .unwrap()
+            .find_all_reverse_fusions(&persona_db);
         match result {
             Normal(result) => assert_eq!(
                 (&result[0].0.name, &result[0].1.name),
-                (&persona_db[0].name, &persona_db[1].name)
+                (
+                    &persona_db.get("Orpheus").unwrap().name,
+                    &persona_db.get("Nekomata").unwrap().name
+                )
             ),
             _ => panic!("Omoikane should be fused from normal recipes."),
         }

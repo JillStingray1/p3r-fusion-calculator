@@ -15,8 +15,8 @@ async fn main() -> std::io::Result<()> {
     HttpServer::new(|| {
         App::new()
             .app_data(Data::new(AppData {
-                persona_list: make_persona_db(),
-                skill_list: vec![],
+                persona_list: make_persona_list(),
+                skill_list: make_skill_list(),
             }))
             .service(Files::new("/static", "src/static/.").show_files_listing())
             .service(persona_list)

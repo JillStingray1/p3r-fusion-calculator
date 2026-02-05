@@ -1,11 +1,12 @@
-use crate::persona::{Persona, Skill};
+use crate::persona::{self, Persona, Skill};
 use crate::templates::*;
 use actix_web::web;
 use actix_web::{HttpRequest, HttpResponse, Responder, get, web::Path};
+use std::collections::HashMap;
 
 pub struct AppData {
-    pub persona_list: Vec<Persona>,
-    pub skill_list: Vec<Skill>,
+    pub persona_list: HashMap<String, Persona>,
+    pub skill_list: HashMap<String, Skill>,
 }
 
 /// Renders the persona list route
@@ -15,7 +16,7 @@ pub struct AppData {
 #[get("/persona_list")]
 pub async fn persona_list<'a>(data: web::Data<AppData>) -> impl Responder {
     let template = PersonaListTemplate {
-        persona_list: &data.persona_list,
+        persona_list: data.persona_list.values().collect(),
     };
     HttpResponse::Ok().body(template.render().unwrap())
 }
@@ -34,20 +35,24 @@ pub async fn persona_details(
     data: web::Data<AppData>,
 ) -> impl Responder {
     let persona_name = path.into_inner();
-    let mut searched_persona: Option<&Persona> = None;
-    for persona in &data.persona_list {
-        if persona.name == persona_name {
-            searched_persona = Some(persona);
-        }
-    }
+    let mut searched_persona: Option<&Persona> =
+        data.persona_list.get(&persona_name);
     match searched_persona {
         Some(found_persona) => {
+            let mut skill_list = vec![];
+            for (skill_name, learned_level) in &found_persona.skills {
+                skill_list.push((
+                    data.skill_list.get(skill_name).unwrap(),
+                    learned_level,
+                ));
+            }
             let template = PersonaTemplate {
                 persona: found_persona,
                 forward_fusions: found_persona
                     .find_all_forward_fusions(&data.persona_list),
                 reverse_fusions: found_persona
                     .find_all_reverse_fusions(&data.persona_list),
+                skill_list,
             };
             HttpResponse::Ok().body(template.render().unwrap())
         }

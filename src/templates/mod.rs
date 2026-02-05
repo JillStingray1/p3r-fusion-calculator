@@ -1,4 +1,8 @@
-use crate::persona::{Recipes, Recipes::*, persona::Persona};
+use crate::persona::{
+    Recipes::{self, *},
+    Skill,
+    persona::Persona,
+};
 pub use askama::Template;
 
 #[derive(Template)]
@@ -7,7 +11,7 @@ pub use askama::Template;
 /// a list of personas, and will display relevant information
 /// such as stats, resistances, name and arcana in a sorted table
 pub struct PersonaListTemplate<'a> {
-    pub persona_list: &'a Vec<Persona>,
+    pub persona_list: Vec<&'a Persona>,
 }
 
 #[derive(Template)]
@@ -16,4 +20,5 @@ pub struct PersonaTemplate<'a> {
     pub persona: &'a Persona,
     pub forward_fusions: Vec<(&'a Persona, &'a Persona)>,
     pub reverse_fusions: Recipes<'a>,
+    pub skill_list: Vec<(&'a Skill, &'a u8)>,
 }
