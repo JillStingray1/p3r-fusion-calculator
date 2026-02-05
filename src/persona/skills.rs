@@ -1,5 +1,3 @@
-use std::fmt::Display;
-
 /// enum that contains all the skill elements
 #[derive(Copy, Clone, Debug)]
 pub enum SkillType {
@@ -20,16 +18,6 @@ pub enum SkillType {
 }
 
 impl SkillType {
-    pub fn iterator() -> impl Iterator<Item = SkillType> {
-        use SkillType::*;
-        [
-            Slash, Strike, Pierce, Fire, Ice, Elec, Wind, Dark, Light, Healing,
-            Support, Ailment, Passive, Almighty,
-        ]
-        .iter()
-        .copied()
-    }
-
     /// Converts the title of the skills.md markdown files
     /// into skill types.
     pub fn from_title(str: String) -> Self {

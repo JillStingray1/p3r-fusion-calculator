@@ -163,7 +163,6 @@ impl Persona {
     ///
     /// This returns the references of the other ingrdient and its
     /// corresponding result persona
-    ////
     pub fn find_all_forward_fusions<'a>(
         &self,
         persona_list: &'a HashMap<String, Self>,
@@ -185,7 +184,7 @@ impl Persona {
     pub fn find_all_reverse_fusions<'a>(
         &'a self,
         persona_list: &'a HashMap<String, Self>,
-    ) -> Recipes {
+    ) -> Recipes<'a> {
         use Recipes::*;
         if self.special_recipe {
             // ! TODO: Get special Recipes
