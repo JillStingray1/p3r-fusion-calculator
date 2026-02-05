@@ -5,7 +5,6 @@ use std::{collections::HashMap, fs::File, io::Read, rc::Rc};
 pub fn make_persona_db() -> Vec<Persona> {
     // for now this is a stub function that gives an example of what the persona_list will look like
     use Arcana::*;
-    use Arcana::*;
     let orpheus = Persona {
         name: String::from("Orpheus"),
         arcana: Fool,
@@ -100,6 +99,7 @@ pub fn make_skill_list() -> HashMap<String, Skill> {
 }
 
 pub fn make_persona_list() -> HashMap<String, Persona> {
+    let mut persona_list = HashMap::new();
     let mut contents = String::new();
     File::open("persona_data/demon-data.json")
         .expect("No file found at persona_data/demon-data.json.")
@@ -108,7 +108,11 @@ pub fn make_persona_list() -> HashMap<String, Persona> {
     let json: Value = from_str(&contents)
         .expect("persona_data/demon-data.json is not properly formatted");
     let map = json.as_object().expect("failed to create map from json");
-    for (persona_name, persona) in map {}
-
-    todo!()
+    for (persona_name, persona) in map {
+        persona_list.insert(
+            persona_name.clone(),
+            Persona::from_json(persona_name, persona),
+        );
+    }
+    persona_list
 }

@@ -11,7 +11,7 @@ use crate::create_db::{make_persona_list, make_skill_list};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    make_persona_list();
+    println!("{:?}", make_persona_list());
     HttpServer::new(|| {
         App::new()
             .app_data(Data::new(AppData {

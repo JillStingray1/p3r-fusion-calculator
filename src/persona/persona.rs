@@ -12,6 +12,7 @@ use std::{collections::HashMap, rc::Rc};
 /// `affinities`: a persona's affinities, which indicates its weaknesses and resistances
 /// `inheritance`: TODO maybe change this to a proper enum
 /// `skills`: A `Vec` that contains a tuple, who's first element is a Skill that the persona learns, and
+#[derive(Debug)]
 pub struct Persona {
     pub name: String,
     pub arcana: Arcana,
@@ -39,8 +40,8 @@ impl Persona {
     /// converts a json strucuture that stores the a persona in demon-data.json into a persona
     pub fn from_json(
         persona_name: &String,
-        skill_list: &HashMap<String, Skill>,
-        persona_data: Value,
+        // skill_list: &HashMap<String, Skill>,
+        persona_data: &Value,
     ) -> Self {
         let arcana = Arcana::from_str(
             persona_data
@@ -58,7 +59,7 @@ impl Persona {
         )
         .expect("Base level was too large");
         let affinities = persona_data
-            .get("race")
+            .get("resists")
             .expect("No race/arcana stored for persona")
             .as_str()
             .expect("Arcana is not stored as string")
@@ -76,7 +77,10 @@ impl Persona {
             let learned_level = if value.as_f64().unwrap() < 1.0 {
                 0
             } else {
-                u8::try_from(value.as_u64().unwrap()).unwrap()
+                match u8::try_from(value.as_u64().unwrap()) {
+                    Ok(x) => x,
+                    Err(_) => 100, // case for theurgies, which are learnt at 5271
+                }
             };
             // skills.push((Rc::new(skill_list[skill_name]), learned_level));
         }
