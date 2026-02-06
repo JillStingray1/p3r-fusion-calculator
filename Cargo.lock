@@ -890,6 +890,7 @@ dependencies = [
  "actix-files",
  "actix-web",
  "askama",
+ "serde_json",
 ]
 
 [[package]]

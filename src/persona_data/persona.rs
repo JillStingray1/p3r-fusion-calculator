@@ -1,6 +1,6 @@
-use std::rc::Rc;
-
 use super::*;
+use serde_json::Value;
+use std::collections::HashMap;
 
 /// The `Persona`` struct contains relevant details for individual personas
 ///
@@ -12,15 +12,16 @@ use super::*;
 /// `affinities`: a persona's affinities, which indicates its weaknesses and resistances
 /// `inheritance`: TODO maybe change this to a proper enum
 /// `skills`: A `Vec` that contains a tuple, who's first element is a Skill that the persona learns, and
+#[derive(Debug)]
 pub struct Persona {
     pub name: String,
     pub arcana: Arcana,
     pub base_level: u8,
     pub special_recipe: bool,
-    pub affinities: [u8; 10],
+    pub affinities: [char; 10],
     pub inheritance: Vec<SkillType>,
-    pub skills: Vec<(Rc<Skill>, u8)>,
-    pub cost: u32,
+    pub skills: Vec<(String, u8)>,
+    pub cost: u64,
     pub stats: [u8; 5],
 }
 
@@ -36,6 +37,80 @@ pub enum Recipes<'a> {
 }
 
 impl Persona {
+    /// converts a json strucuture that stores the a persona in demon-data.json into a persona
+    pub fn from_json(
+        persona_name: &str,
+        // skill_list: &HashMap<String, Skill>,
+        persona_data: &Value,
+    ) -> Self {
+        let arcana = Arcana::from_str(
+            persona_data
+                .get("race")
+                .expect("No race/arcana stored for persona")
+                .as_str()
+                .expect("Arcana is not stored as string"),
+        );
+        let base_level = u8::try_from(
+            persona_data
+                .get("lvl")
+                .expect("No level found for persona")
+                .as_u64()
+                .expect("Value was not a number"),
+        )
+        .expect("Base level was too large");
+        let affinities = persona_data
+            .get("resists")
+            .expect("No race/arcana stored for persona")
+            .as_str()
+            .expect("Arcana is not stored as string")
+            .chars()
+            .collect::<Vec<_>>()
+            .try_into()
+            .unwrap();
+        let skill_map = persona_data
+            .get("skills")
+            .expect("Skills not formatted properly")
+            .as_object()
+            .expect("Skills not formatted properly");
+        let mut skills = vec![];
+        for (skill_name, value) in skill_map {
+            let learned_level = if value.as_f64().unwrap() < 1.0 {
+                0
+            } else {
+                u8::try_from(value.as_u64().unwrap()).unwrap_or(100)
+            };
+            skills.push((skill_name.clone(), learned_level));
+        }
+        let mut stats = [0; 5];
+        let mut stats_sum = 0;
+        let stats_array = persona_data
+            .get("stats")
+            .expect("Stats not found")
+            .as_array()
+            .expect("stats not formated properly");
+        if stats_array.len() != 5 {
+            panic!("There are more or less than 5 stats provided");
+        };
+        for ind in 0..5 {
+            let stat = stats_array[ind]
+                .as_u64()
+                .expect("stat is not a positive number");
+            stats[ind] = u8::try_from(stat).expect("");
+            stats_sum += stat
+        }
+        Persona {
+            name: persona_name.to_string(),
+            arcana,
+            base_level,
+            affinities,
+            special_recipe: false,
+            inheritance: vec![],
+            cost: 2000 + stats_sum.pow(2),
+            skills,
+            stats,
+        }
+    }
+
     /// Gets the result of a fusion between 2 personae.
     ///
     /// This is determined by the using the fusion table to determine
@@ -46,7 +121,7 @@ impl Persona {
     pub fn fuse<'a>(
         &self,
         rhs: &'a Self,
-        persona_list: &'a Vec<Self>,
+        persona_list: &'a HashMap<String, Self>,
     ) -> Option<&'a Self> {
         let fused_arcana = self.arcana + rhs.arcana;
 
@@ -54,7 +129,7 @@ impl Persona {
         if fused_arcana != self.arcana {
             let fused_level = (self.base_level + rhs.base_level) / 2 + 1;
             let mut result_level = 99;
-            for persona in persona_list {
+            for persona in persona_list.values() {
                 if (persona.arcana == fused_arcana)
                     && (persona.base_level >= fused_level)
                     && (persona.base_level < result_level)
@@ -67,7 +142,7 @@ impl Persona {
         } else {
             let fused_level = (self.base_level + rhs.base_level) / 2 - 1;
             let mut result_level = 0;
-            for persona in persona_list {
+            for persona in persona_list.values() {
                 if (persona.arcana == fused_arcana)
                     && (persona.base_level <= fused_level)
                     && (persona.base_level > result_level)
@@ -85,16 +160,14 @@ impl Persona {
     ///
     /// This returns the references of the other ingrdient and its
     /// corresponding result persona
-    ////
     pub fn find_all_forward_fusions<'a>(
         &self,
-        persona_list: &'a Vec<Self>,
+        persona_list: &'a HashMap<String, Self>,
     ) -> Vec<(&'a Self, &'a Self)> {
         let mut forward_fusions = vec![];
-        for persona in persona_list {
-            match self.fuse(persona, persona_list) {
-                Some(x) => forward_fusions.push((persona, x)),
-                None => (),
+        for persona in persona_list.values() {
+            if let Some(x) = self.fuse(persona, persona_list) {
+                forward_fusions.push((persona, x))
             }
         }
         forward_fusions
@@ -106,8 +179,8 @@ impl Persona {
     ///
     pub fn find_all_reverse_fusions<'a>(
         &'a self,
-        persona_list: &'a Vec<Self>,
-    ) -> Recipes {
+        persona_list: &'a HashMap<String, Self>,
+    ) -> Recipes<'a> {
         use Recipes::*;
         if self.special_recipe {
             // ! TODO: Get special Recipes
@@ -116,8 +189,8 @@ impl Persona {
             let mut reverse_fusions = vec![];
             let fusion_pairs = self.arcana.get_possible_combos();
             for (arcana_1, arcana_2) in fusion_pairs {
-                for persona_1 in persona_list {
-                    for persona_2 in persona_list {
+                for persona_1 in persona_list.values() {
+                    for persona_2 in persona_list.values() {
                         if (persona_1.arcana == arcana_1)
                             && (persona_2.arcana == arcana_2)
                             && (match persona_1.fuse(persona_2, persona_list) {
@@ -130,7 +203,7 @@ impl Persona {
                     }
                 }
             }
-            return Normal(reverse_fusions);
+            Normal(reverse_fusions)
         }
     }
 }
@@ -138,18 +211,21 @@ impl Persona {
 #[cfg(test)]
 mod persona_tests {
     use core::panic;
-    use std::result;
 
     use super::*;
     /// generates a small list of personae to test fusion with
-    fn make_persona_list() -> Vec<Persona> {
+    fn make_persona_list() -> HashMap<String, Persona> {
         use Arcana::*;
         let orpheus = Persona {
             name: String::from("Orpheus"),
             arcana: Fool,
             base_level: 1,
             special_recipe: false,
-            affinities: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            affinities: "---s-w--w-"
+                .chars()
+                .collect::<Vec<_>>()
+                .try_into()
+                .unwrap(),
             inheritance: vec![],
             skills: vec![],
             cost: 0,
@@ -160,7 +236,11 @@ mod persona_tests {
             arcana: Magician,
             base_level: 3,
             special_recipe: false,
-            affinities: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            affinities: "---s-w--w-"
+                .chars()
+                .collect::<Vec<_>>()
+                .try_into()
+                .unwrap(),
             inheritance: vec![],
             skills: vec![],
             cost: 0,
@@ -171,13 +251,21 @@ mod persona_tests {
             arcana: Hierophant,
             base_level: 7,
             special_recipe: false,
-            affinities: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            affinities: "---s-w--w-"
+                .chars()
+                .collect::<Vec<_>>()
+                .try_into()
+                .unwrap(),
             inheritance: vec![],
             skills: vec![],
             cost: 0,
             stats: [0, 0, 0, 0, 0],
         };
-        vec![orpheus, nekomata, omoikane]
+        HashMap::from([
+            (String::from("Orpheus"), orpheus),
+            (String::from("Nekomata"), nekomata),
+            (String::from("Omoikane"), omoikane),
+        ])
     }
 
     /// tests the fusion of 2 personas
@@ -185,8 +273,14 @@ mod persona_tests {
     #[test]
     fn test_fuse() {
         let persona_db = make_persona_list();
-        let result = persona_db[0].fuse(&persona_db[1], &persona_db);
-        assert_eq!(result.unwrap().name, persona_db[2].name);
+        let result = persona_db
+            .get("Orpheus")
+            .unwrap()
+            .fuse(persona_db.get("Nekomata").unwrap(), &persona_db);
+        assert_eq!(
+            result.unwrap().name,
+            persona_db.get("Omoikane").unwrap().name
+        );
     }
 
     /// tests reverse fusion, omoikane can be fused from orpheus + nekomata
@@ -194,11 +288,17 @@ mod persona_tests {
     fn test_reverse_fuse() {
         use Recipes::*;
         let persona_db = make_persona_list();
-        let result = persona_db[2].find_all_reverse_fusions(&persona_db);
+        let result = persona_db
+            .get("Omoikane")
+            .unwrap()
+            .find_all_reverse_fusions(&persona_db);
         match result {
             Normal(result) => assert_eq!(
                 (&result[0].0.name, &result[0].1.name),
-                (&persona_db[0].name, &persona_db[1].name)
+                (
+                    &persona_db.get("Orpheus").unwrap().name,
+                    &persona_db.get("Nekomata").unwrap().name
+                )
             ),
             _ => panic!("Omoikane should be fused from normal recipes."),
         }

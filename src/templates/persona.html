@@ -48,10 +48,12 @@
 
     <h3>Skills</h3>
     <table>
-        {% for skill in persona.skills %}
-        <td>{{ skill.0.name }}</td>
-        <td>{{ skill.0.description }}</td>
-        <td>{{ skill.1 }}</td>
+        {% for skill in skill_list %}
+        <tr>
+            <td>{{ skill.0.name }}</td>
+            <td>{{ skill.0.description }}</td>
+            <td>{{ skill.1 }}</td>
+        </tr>
         {% endfor %}
     </table>
 
