@@ -1,7 +1,9 @@
-$(document).ready(function () {
+
+
+window.onload = function () {
     DataTable.defaults.column.orderSequence = ['asc', 'desc'];
-    $("#persona_table").DataTable({
+    let table = new DataTable ( "#persona_table", {
         paging: false,
         bInfo: false,
     });
-});
+}
