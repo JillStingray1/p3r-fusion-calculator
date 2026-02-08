@@ -1,9 +1,6 @@
 use super::*;
 use serde_json::Value;
-use std::{
-    collections::{HashMap, HashSet},
-    result,
-};
+use std::collections::{HashMap, HashSet};
 
 /// The `Persona`` struct contains relevant details for individual personas
 ///
