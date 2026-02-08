@@ -9,12 +9,6 @@ use create_db::{make_persona_list, make_skill_list};
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    let p_list = make_persona_list();
-    println!("{:?}", p_list["Berith"].fuse(&p_list["Shiisaa"], &p_list));
-    println!(
-        "{}",
-        persona_data::Arcana::Lovers + persona_data::Arcana::Lovers
-    );
     HttpServer::new(|| {
         App::new()
             .app_data(Data::new(AppData {

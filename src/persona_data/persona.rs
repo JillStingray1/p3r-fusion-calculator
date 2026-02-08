@@ -1,6 +1,9 @@
 use super::*;
 use serde_json::Value;
-use std::collections::{HashMap, HashSet};
+use std::{
+    collections::{HashMap, HashSet},
+    result,
+};
 
 /// The `Persona`` struct contains relevant details for individual personas
 ///
@@ -125,10 +128,13 @@ impl Persona {
         persona_list: &'a HashMap<String, Self>,
     ) -> Option<&'a Self> {
         let fused_arcana = self.arcana + rhs.arcana;
-
+        if self.name == rhs.name {
+            return None;
+        }
         let mut result_persona: Option<&Self> = None;
         if fused_arcana != self.arcana {
-            let fused_level = (self.base_level + rhs.base_level) / 2 + 1;
+            let fused_level = (self.base_level + rhs.base_level) / 2
+                + (self.base_level + rhs.base_level) % 2;
             let mut result_level = 99;
             for persona in persona_list.values() {
                 if (persona.arcana == fused_arcana)
@@ -142,7 +148,8 @@ impl Persona {
                 }
             }
         } else {
-            let fused_level = (self.base_level + rhs.base_level) / 2;
+            let fused_level = (self.base_level + rhs.base_level) / 2
+                + (self.base_level + rhs.base_level) % 2;
             let mut result_level = 0;
             for persona in persona_list.values() {
                 if (persona.arcana == fused_arcana)
