@@ -28,3 +28,25 @@ h1 {
 p, table {
     color: #51eefc;
 }
+
+
+.weak {
+    color: red;
+}
+
+.resist {
+    color: darkcyan;
+}
+
+.null {
+    color: grey;
+}
+
+
+.repel {
+    color: yellow;
+}
+
+.absorb {
+    color: green;
+}

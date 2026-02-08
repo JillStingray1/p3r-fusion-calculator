@@ -31,7 +31,11 @@
         </tr>
         <tr>
             {% for resistances in persona.affinities %}
-            <td>{{ resistances }}</td>
+                {% if *resistances == '-'%}
+                    <td>{{ resistances }}</td>
+                {% else if *resistances == 'w'%}
+                {% else if *resistances == 'r'%} 
+                {% endif %}
             {% endfor %}
         </tr>
     </table>
