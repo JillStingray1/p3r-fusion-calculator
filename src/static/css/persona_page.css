@@ -1,27 +1,39 @@
 .tab {
-    display: flex;
-    overflow: hidden;
-    margin:auto;
-    align-items: center;
-    justify-content: center;
-    width: 50%;
+  display: flex;
+  overflow: hidden;
+  margin: auto;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 .tab button {
-    background-color: inherit;
-    border: none;
-    margin: auto;
-    outline: none;
-    cursor: pointer;
-    padding: 1%;
-    width: 50%;
+  border-radius: 10px;
+  background-color: inherit;
+  color: white;
+  border: none;
+  margin: auto;
+  outline: none;
+  cursor: pointer;
+  padding: 1%;
+  width: 100%;
 }
 
 .tab button.active {
-    background-color: #1e1f79;
+  background-color: #1269cc;
 }
 
 .tabcontent {
-    display:none;
-    padding: 6px;
+  display: none;
+  padding: 6px;
+  margin: auto;
+  width: 100%;
+}
+
+.border {
+  outline: 3px black solid;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  width: 50%;
 }
