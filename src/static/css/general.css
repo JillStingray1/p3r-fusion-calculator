@@ -34,11 +34,11 @@ table {
 }
 
 .resist {
-  color: darkcyan;
+  color: violet;
 }
 
 .null {
-  color: grey;
+  color: black;
 }
 
 .repel {
@@ -46,5 +46,5 @@ table {
 }
 
 .absorb {
-  color: green;
+  color: limegreen;
 }
