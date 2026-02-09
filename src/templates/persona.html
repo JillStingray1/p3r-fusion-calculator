@@ -36,13 +36,23 @@
         <th>Wind</th>
         <th>Dark</th>
         <th>Light</th>
-        <th>Almighty</th>
       </tr>
       <tr>
-        {% for resistances in persona.affinities %} {% if *resistances == '-'%}
-        <td>{{ resistances }}</td>
-        {% else if *resistances == 'w'%} {% else if *resistances == 'r'%} {%
-        endif %} {% endfor %}
+        {% for resistances in persona.affinities %} 
+          {% if *resistances == '-'%}
+          <td> </td>
+          {% else if *resistances == 'w' %}
+          <td class="weak">wk</td>
+          {% else if *resistances == 's' %} 
+          <td class="resist">rs</td>
+          {% else if *resistances == 'n' %} 
+          <td class="null">nu</td>
+          {% else if *resistances == 'd' %} 
+          <td class="absorb">dr</td>
+          {% else if *resistances == 'r' %} 
+          <td class="repel">rp</td>
+          {% endif %} 
+        {% endfor %}
       </tr>
     </table>
 
@@ -89,7 +99,7 @@
           Forward Fusions
         </button>
       </div>
-      <div id="reverse-tab" class="tabcontent">
+      <div id="reverse-tab" class="tabcontent" style="display: block">
         {% match reverse_fusions %} {% when Normal(recipe_list) %}
         <table id="reverse-fusions">
           <thead>
