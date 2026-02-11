@@ -18,88 +18,86 @@
     <script src="/static/javascript/persona_page.js"></script>
     <title>{{ persona.name }}</title>
   </head>
+
   <body>
-    <h2>
-      {{ persona.arcana.to_string() }} <b>{{ persona.name }}</b> Level {{
-      persona.base_level }}
-    </h2>
-    <!-- resistances table -->
-    <h3>Resistances</h3>
-    <table>
-      <tr>
-        <th>Slash</th>
-        <th>Strike</th>
-        <th>Pierce</th>
-        <th>Fire</th>
-        <th>Ice</th>
-        <th>Elec</th>
-        <th>Wind</th>
-        <th>Dark</th>
-        <th>Light</th>
-      </tr>
-      <tr>
-        {% for resistances in persona.affinities %} 
-          {% if *resistances == '-'%}
-          <td> </td>
+    <div class="persona_data">
+      <h2 class="inner_element">
+        {{ persona.arcana.to_string() }} <b>{{ persona.name }}</b> Level {{
+        persona.base_level }}
+      </h2>
+      <!-- resistances table -->
+      <h3 class="inner_element">Resistances</h3>
+      <table class="inner_element">
+        <tr>
+          <th>Slash</th>
+          <th>Strike</th>
+          <th>Pierce</th>
+          <th>Fire</th>
+          <th>Ice</th>
+          <th>Elec</th>
+          <th>Wind</th>
+          <th>Dark</th>
+          <th>Light</th>
+        </tr>
+        <tr>
+          {% for resistances in persona.affinities %} {% if *resistances ==
+          '-'%}
+          <td></td>
           {% else if *resistances == 'w' %}
           <td class="weak">wk</td>
-          {% else if *resistances == 's' %} 
+          {% else if *resistances == 's' %}
           <td class="resist">rs</td>
-          {% else if *resistances == 'n' %} 
+          {% else if *resistances == 'n' %}
           <td class="null">nu</td>
-          {% else if *resistances == 'd' %} 
+          {% else if *resistances == 'd' %}
           <td class="absorb">dr</td>
-          {% else if *resistances == 'r' %} 
+          {% else if *resistances == 'r' %}
           <td class="repel">rp</td>
-          {% endif %} 
-        {% endfor %}
-      </tr>
-    </table>
+          {% endif %} {% endfor %}
+        </tr>
+      </table>
 
-    <h3>Stats</h3>
-    <table>
-      <tr>
-        <th>St</th>
-        <th>Mg</th>
-        <th>En</th>
-        <th>Ag</th>
-        <th>Lu</th>
-      </tr>
-      <tr>
-        {% for stat in persona.stats %}
-        <td>{{stat}}</td>
-        {% endfor %}
-      </tr>
-    </table>
+      <h3 class="inner_element">Stats</h3>
+      <table class="inner_element">
+        <tr>
+          <th>St</th>
+          <th>Mg</th>
+          <th>En</th>
+          <th>Ag</th>
+          <th>Lu</th>
+        </tr>
+        <tr>
+          {% for stat in persona.stats %}
+          <td>{{stat}}</td>
+          {% endfor %}
+        </tr>
+      </table>
 
-    <h3>Skills</h3>
-    <table>
-      {% for skill in skill_list %}
-      <tr>
-        <td>{{ skill.0.name }}</td>
-        <td>{{ skill.0.description }}</td>
-        <td>{{ skill.1 }}</td>
-      </tr>
-      {% endfor %}
-    </table>
+      <h3 class="inner_element">Skills</h3>
+      <table>
+        {% for skill in skill_list %}
+        <tr>
+          <td>{{ skill.0.name }}</td>
+          <td>{{ skill.0.description }}</td>
+          <td>{{ skill.1 }}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+
+    <!-- fusion tables -->
     <div class="border">
       <div class="tab">
-        <button
-          class="tabbutton"
-          ,
-          onclick="show_fusions(event, 'reverse-tab')"
-        >
+        <button class="tabbutton" onclick="show_fusions(event, 'reverse-tab')">
           Reverse Fusions
         </button>
-        <button
-          class="tabbutton"
-          ,
-          onclick="show_fusions(event, 'forward-tab')"
-        >
+        <button class="tabbutton" onclick="show_fusions(event, 'forward-tab')">
           Forward Fusions
         </button>
       </div>
+
       <div id="reverse-tab" class="tabcontent" style="display: block">
+        <!-- reverse normal fusions -->
         {% match reverse_fusions %} {% when Normal(recipe_list) %}
         <table id="reverse-fusions">
           <thead>
@@ -131,6 +129,8 @@
             {% endfor %}
           </tbody>
         </table>
+
+        <!-- reverse special fusion -->
         {% when Special(recipe) %}
         <table id="reverse-fusions">
           <thead>
