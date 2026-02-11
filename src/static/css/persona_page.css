@@ -7,8 +7,7 @@
 }
 
 .tab button {
-  border-radius: 10px;
-  background-color: inherit;
+  background-color: #303030;
   color: white;
   border: none;
   outline: none;
@@ -17,8 +16,17 @@
   width: 100%;
 }
 
+.tab button.left {
+  border-radius: 20px 0px;
+}
+.tab button.right {
+  border-radius: 0px 20px;
+}
+
 .tab button.active {
-  background-color: #1269cc;
+  background-color: inherit;
+  color: #51eefc;
+  font-weight: bold;
 }
 
 .tabcontent {
@@ -29,7 +37,7 @@
 
 .border {
   outline: 2px white solid;
-  border-radius: 6px;
+  border-radius: 20px;
   margin: auto;
   display: flex;
   flex-direction: column;
