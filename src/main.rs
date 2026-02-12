@@ -3,7 +3,7 @@ mod create_db;
 mod persona_data;
 mod templates;
 use actix_files::Files;
-use actix_web::{App, HttpServer, web::Data};
+use actix_web::{App, HttpServer,  web::{self, Data}};
 use app::*;
 use create_db::{make_persona_list, make_skill_list};
 
@@ -19,6 +19,7 @@ async fn main() -> std::io::Result<()> {
             .service(persona_list)
             .service(skills)
             .service(persona_details)
+            .service(web::redirect("/", "/persona_list"))
     })
     .bind(("127.0.0.1", 5000))?
     .run()
