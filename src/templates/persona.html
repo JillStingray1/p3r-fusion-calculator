@@ -21,9 +21,11 @@
 
   <body>
     <div class="persona_data">
+      <p><a href="/persona_list">Back to persona list</a></p>
       <h2 class="inner_element">
-        {{ persona.arcana.to_string() }} <b>{{ persona.name }}</b> Level {{
-        persona.base_level }}
+        {{ persona.arcana.to_string() }}
+        <b>{{ persona.name }}</b>
+        Level {{ persona.base_level }}
       </h2>
       <!-- resistances table -->
       <h3 class="inner_element">Resistances</h3>
@@ -148,15 +150,9 @@
           </thead>
           <tbody>
             {% for ingredient in recipe %}
-            <tr>
-              {{ ingredient.arcana.to_string() }}
-            </tr>
-            <tr>
-              {{ ingredient.base_level }}
-            </tr>
-            <tr>
-              {{ ingredient.name }}
-            </tr>
+            <tr>{{ ingredient.arcana.to_string() }}</tr>
+            <tr>{{ ingredient.base_level }}</tr>
+            <tr>{{ ingredient.name }}</tr>
             {% endfor %}
           </tbody>
         </table>
