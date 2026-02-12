@@ -1,6 +1,6 @@
 use super::*;
 use serde_json::Value;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 /// The `Persona`` struct contains relevant details for individual personas
 ///
@@ -12,7 +12,7 @@ use std::collections::HashMap;
 /// `affinities`: a persona's affinities, which indicates its weaknesses and resistances
 /// `inheritance`: TODO maybe change this to a proper enum
 /// `skills`: A `Vec` that contains a tuple, who's first element is a Skill that the persona learns, and
-#[derive(Debug)]
+#[derive(Debug, Eq, PartialEq, Hash)]
 pub struct Persona {
     pub name: String,
     pub arcana: Arcana,
@@ -31,6 +31,7 @@ pub struct Persona {
 /// special fusion. Normal fusion personas can have many possible recipies consisting
 /// of 2 personas, whist special fusion can only have 1 fixed recipe consisting of any
 /// number of personas
+#[derive(Debug)]
 pub enum Recipes<'a> {
     Normal(Vec<(&'a Persona, &'a Persona)>),
     Special(Vec<&'a Persona>),
@@ -124,15 +125,19 @@ impl Persona {
         persona_list: &'a HashMap<String, Self>,
     ) -> Option<&'a Self> {
         let fused_arcana = self.arcana + rhs.arcana;
-
+        if self.name == rhs.name {
+            return None;
+        }
         let mut result_persona: Option<&Self> = None;
         if fused_arcana != self.arcana {
-            let fused_level = (self.base_level + rhs.base_level) / 2 + 1;
+            let fused_level = (self.base_level + rhs.base_level) / 2
+                + (self.base_level + rhs.base_level) % 2;
             let mut result_level = 99;
             for persona in persona_list.values() {
                 if (persona.arcana == fused_arcana)
                     && (persona.base_level >= fused_level)
                     && (persona.base_level < result_level)
+                    && (persona.name != self.name)
                     && (!persona.special_recipe)
                 {
                     result_level = persona.base_level;
@@ -140,12 +145,14 @@ impl Persona {
                 }
             }
         } else {
-            let fused_level = (self.base_level + rhs.base_level) / 2 - 1;
+            let fused_level = (self.base_level + rhs.base_level) / 2
+                + (self.base_level + rhs.base_level) % 2;
             let mut result_level = 0;
             for persona in persona_list.values() {
                 if (persona.arcana == fused_arcana)
                     && (persona.base_level <= fused_level)
                     && (persona.base_level > result_level)
+                    && (persona.name != self.name)
                     && (!persona.special_recipe)
                 {
                     result_level = persona.base_level;
@@ -172,6 +179,7 @@ impl Persona {
         }
         forward_fusions
     }
+
     /// Finds all recipes which creates the persona that this is called on
     ///
     /// This is done by searching all arcana pairs that result in a persona, and then
@@ -186,24 +194,30 @@ impl Persona {
             // ! TODO: Get special Recipes
             Special(vec![])
         } else {
-            let mut reverse_fusions = vec![];
+            let mut reverse_fusions = HashSet::new();
             let fusion_pairs = self.arcana.get_possible_combos();
             for (arcana_1, arcana_2) in fusion_pairs {
                 for persona_1 in persona_list.values() {
                     for persona_2 in persona_list.values() {
                         if (persona_1.arcana == arcana_1)
                             && (persona_2.arcana == arcana_2)
+                            && (self.name != persona_1.name)
+                            && (self.name != persona_2.name)
                             && (match persona_1.fuse(persona_2, persona_list) {
                                 None => false,
                                 Some(result) => result.name == self.name,
                             })
                         {
-                            reverse_fusions.push((persona_1, persona_2));
+                            if persona_1.base_level < persona_2.base_level {
+                                reverse_fusions.insert((persona_1, persona_2));
+                            } else {
+                                reverse_fusions.insert((persona_2, persona_1));
+                            }
                         }
                     }
                 }
             }
-            Normal(reverse_fusions)
+            Normal(reverse_fusions.into_iter().collect())
         }
     }
 }

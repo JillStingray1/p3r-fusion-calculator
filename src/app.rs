@@ -14,7 +14,7 @@ pub struct AppData {
 /// This displays details for each persona
 /// such as their names, arcana, stats and resistances
 #[get("/persona_list")]
-pub async fn persona_list<'a>(data: web::Data<AppData>) -> impl Responder {
+pub async fn persona_list(data: web::Data<AppData>) -> impl Responder {
     let template = PersonaListTemplate {
         persona_list: data.persona_list.values().collect(),
     };

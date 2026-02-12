@@ -1,0 +1,59 @@
+.tab {
+  display: flex;
+  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.tab button {
+  background-color: #303030;
+  color: white;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 1%;
+  width: 100%;
+}
+
+.tab button.left {
+  border-radius: 20px 0px;
+}
+.tab button.right {
+  border-radius: 0px 20px;
+}
+
+.tab button.active {
+  background-color: inherit;
+  color: #51eefc;
+  font-weight: bold;
+}
+
+.tabcontent {
+  display: none;
+  padding: 6px;
+  width: 100%;
+}
+
+.border {
+  outline: 2px white solid;
+  border-radius: 20px;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+}
+
+.persona_data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  width: 50%;
+}
+
+.persona_data table {
+  background-color: #303030;
+  border-radius: 6px;
+}

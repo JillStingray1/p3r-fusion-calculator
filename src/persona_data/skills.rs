@@ -1,5 +1,5 @@
 /// enum that contains all the skill elements
-#[derive(Copy, Clone, Debug)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq, Hash)]
 pub enum SkillType {
     Slash,
     Strike,
