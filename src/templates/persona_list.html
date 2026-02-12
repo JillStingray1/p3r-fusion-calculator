@@ -25,7 +25,7 @@
         <tr data-dt-order="disable">
           <th colspan="3">Persona</th>
           <th colspan="5">Stats</th>
-          <!-- <th colspan="9">Resistances</th> -->
+          <th colspan="10">Resistances</th>
         </tr>
         <tr>
           <th>Arcana</th>
@@ -34,8 +34,17 @@
           <th>St</th>
           <th>Mg</th>
           <th>En</th>
-          <th>Ag</th> 
+          <th>Ag</th>
           <th>Lu</th>
+          <th>Sla</th>
+          <th>Str</th>
+          <th>Pie</th>
+          <th>Fir</th>
+          <th>Ice</th>
+          <th>Ele</th>
+          <th>Win</th>
+          <th>Dar</th>
+          <th>Lig</th>
         </tr>
       </thead>
       <tbody>
@@ -50,6 +59,21 @@
           <td>{{persona.base_level}}</td>
           {% for stat in persona.stats %}
           <td>{{stat}}</td>
+          {% endfor %} 
+          {% for resistances in persona.affinities %}
+            {% if *resistances == '-'%}
+              <td data-order="1"></td>
+            {% else if *resistances == 'w' %}
+              <td class="weak" data-order="0">wk</td>
+            {% else if *resistances == 's' %}
+              <td class="resist" data-order="2">rs</td>
+            {% else if *resistances == 'n' %}
+              <td class="null" data-order="3">nu</td>
+            {% else if *resistances == 'd' %}
+              <td class="absorb" data-order="5">dr</td>
+            {% else if *resistances == 'r' %}
+              <td class="repel" data-order="4">rp</td>
+            {% endif %} 
           {% endfor %}
         </tr>
         {% endfor %}
