@@ -59,6 +59,8 @@ impl Persona {
                 .expect("Value was not a number"),
         )
         .expect("Base level was too large");
+
+        // gets the affinities as an array of chars (converting from string)
         let affinities = persona_data
             .get("resists")
             .expect("No race/arcana stored for persona")
@@ -74,10 +76,15 @@ impl Persona {
             .as_object()
             .expect("Skills not formatted properly");
         let mut skills = vec![];
+
+        // skills need to be stored with their learned level, the json stores
+        // inital skills as 0.1, 0.2 and 0.3 to denote which skill slot they appear in
         for (skill_name, value) in skill_map {
             let learned_level = if value.as_f64().unwrap() < 1.0 {
                 0
             } else {
+                // theurgies are stored as learnt at level 100, the data stores it as 5207
+                // so trying to convert from u64 will fail
                 u8::try_from(value.as_u64().unwrap()).unwrap_or(100)
             };
             skills.push((skill_name.clone(), learned_level));
