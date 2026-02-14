@@ -18,6 +18,7 @@ async fn main() -> std::io::Result<()> {
             .app_data(Data::new(AppData {
                 persona_list: make_persona_list(),
                 skill_list: make_skill_list(),
+                special_fusions: make_special_fusions(),
             }))
             .service(Files::new("/static", "src/static/.").show_files_listing())
             .service(persona_list)

@@ -7,6 +7,7 @@ use std::collections::HashMap;
 pub struct AppData {
     pub persona_list: HashMap<String, Persona>,
     pub skill_list: HashMap<String, Skill>,
+    pub special_fusions: HashMap<String, Vec<String>>,
 }
 
 /// Renders the persona list route
