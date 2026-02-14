@@ -65,3 +65,12 @@ pub fn make_persona_list() -> HashMap<String, Persona> {
     }
     persona_list
 }
+
+pub fn make_special_fusions() -> HashMap<String, Vec<String>> {
+    let mut contents = String::new();
+    File::open("persona_data/special-recipes.json")
+        .expect("No file found")
+        .read_to_string(&mut contents)
+        .expect("failed to read");
+    from_str::<HashMap<String, Vec<String>>>(&contents).unwrap()
+}

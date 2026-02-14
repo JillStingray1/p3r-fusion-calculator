@@ -3,12 +3,16 @@ mod create_db;
 mod persona_data;
 mod templates;
 use actix_files::Files;
-use actix_web::{App, HttpServer,  web::{self, Data}};
+use actix_web::{
+    App, HttpServer,
+    web::{self, Data},
+};
 use app::*;
-use create_db::{make_persona_list, make_skill_list};
+use create_db::*;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    make_special_fusions();
     HttpServer::new(|| {
         App::new()
             .app_data(Data::new(AppData {
