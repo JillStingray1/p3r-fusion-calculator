@@ -47,6 +47,9 @@ pub fn make_skill_list() -> HashMap<String, Skill> {
     skill_list
 }
 
+/// Converts a file located at ./persona_data/demon-data.json into a hashmap
+/// which contains the name of the persona as the key to a
+/// Persona struct corresponding to that.
 pub fn make_persona_list() -> HashMap<String, Persona> {
     let mut persona_list = HashMap::new();
     let mut contents = String::new();
@@ -66,6 +69,9 @@ pub fn make_persona_list() -> HashMap<String, Persona> {
     persona_list
 }
 
+/// Converts a file located at ./persona_data/special-recipes.json into a hashmap
+/// which contains the name of the persona as the key to a
+/// Vec containing a list of persona names which form the ingredients for a special fusion.
 pub fn make_special_fusions() -> HashMap<String, Vec<String>> {
     let mut contents = String::new();
     File::open("persona_data/special-recipes.json")
