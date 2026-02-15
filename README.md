@@ -6,4 +6,11 @@ Persona has a fusion mechanic with its collectable monsters, called persona, fus
 persona based on the average of the ingredients base level, as well as the arcanae of the ingredients. This tool is intended to assist
 players to recipes that they need.
 
-## Possible Updates
+## Build
+
+To build this project:
+1. Install (rustup)[rustup.rs/].
+2. Clone the repository into a local directory.
+3. Run `cargo build` within the cloned directory.
+
+A binary release is also included, which is by default hosted on localhost at port 5000. 
