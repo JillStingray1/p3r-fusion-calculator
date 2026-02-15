@@ -12,13 +12,13 @@ use create_db::*;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
-    make_special_fusions();
     HttpServer::new(|| {
+        let special_fusions = make_special_fusions();
         App::new()
             .app_data(Data::new(AppData {
-                persona_list: make_persona_list(),
+                persona_list: make_persona_list(&special_fusions),
                 skill_list: make_skill_list(),
-                special_fusions: make_special_fusions(),
+                special_fusions,
             }))
             .service(Files::new("/static", "src/static/.").show_files_listing())
             .service(persona_list)

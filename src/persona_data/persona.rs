@@ -43,6 +43,7 @@ impl Persona {
         persona_name: &str,
         // skill_list: &HashMap<String, Skill>,
         persona_data: &Value,
+        special_fusions: &HashMap<String, Vec<String>>,
     ) -> Self {
         let arcana = Arcana::from_str(
             persona_data
@@ -111,7 +112,7 @@ impl Persona {
             arcana,
             base_level,
             affinities,
-            special_recipe: false,
+            special_recipe: special_fusions.contains_key(persona_name),
             inheritance: vec![],
             cost: 2000 + stats_sum.pow(2),
             skills,
@@ -195,11 +196,16 @@ impl Persona {
     pub fn find_all_reverse_fusions<'a>(
         &'a self,
         persona_list: &'a HashMap<String, Self>,
+        special_fusions: &HashMap<String, Vec<String>>,
     ) -> Recipes<'a> {
         use Recipes::*;
         if self.special_recipe {
-            // ! TODO: Get special Recipes
-            Special(vec![])
+            let names_in_recipe = special_fusions.get(&self.name).unwrap();
+            let mut recipe = vec![];
+            for name in names_in_recipe {
+                recipe.push(persona_list.get(name).unwrap());
+            }
+            Special(recipe)
         } else {
             let mut reverse_fusions = HashSet::new();
             let fusion_pairs = self.arcana.get_possible_combos();
@@ -312,7 +318,7 @@ mod persona_tests {
         let result = persona_db
             .get("Omoikane")
             .unwrap()
-            .find_all_reverse_fusions(&persona_db);
+            .find_all_reverse_fusions(&persona_db, &HashMap::new());
         match result {
             Normal(result) => assert_eq!(
                 (&result[0].0.name, &result[0].1.name),
