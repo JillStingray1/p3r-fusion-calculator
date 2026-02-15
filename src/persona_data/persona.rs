@@ -132,8 +132,12 @@ impl Persona {
         rhs: &'a Self,
         persona_list: &'a HashMap<String, Self>,
     ) -> Option<&'a Self> {
+        use Arcana::*;
         let fused_arcana = self.arcana + rhs.arcana;
-        if self.name == rhs.name {
+        if self.name == rhs.name
+            || (self.arcana == Death && rhs.arcana == Aeon)
+            || (self.arcana == Aeon && rhs.arcana == Death)
+        {
             return None;
         }
         let mut result_persona: Option<&Self> = None;
