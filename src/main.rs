@@ -20,7 +20,7 @@ async fn main() -> std::io::Result<()> {
                 skill_list: make_skill_list(),
                 special_fusions,
             }))
-            .service(Files::new("/static", "src/static/.").show_files_listing())
+            .service(Files::new("/static", "static/.").show_files_listing())
             .service(persona_list)
             .service(skills)
             .service(persona_details)
