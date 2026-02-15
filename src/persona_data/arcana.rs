@@ -118,6 +118,20 @@ macro_rules! define_arcana_ops {
     };
 }
 
+impl Sub for Arcana {
+    type Output = Vec<Arcana>;
+
+    fn sub(self, rhs: Self) -> Self::Output {
+        let mut result = vec![];
+        for arcana in Arcana::iterator() {
+            if arcana + rhs == self {
+                result.push(arcana);
+            }
+        }
+        result
+    }
+}
+
 define_arcana_ops! {
     // Fool
     (Fool, Magician) => Hierophant,
@@ -204,18 +218,190 @@ define_arcana_ops! {
     (Empress, Sun) => Emperor,
     (Empress, Judgement) => Lovers,
     (Empress, Aeon) => Priestess,
-}
 
-impl Sub for Arcana {
-    type Output = Vec<Arcana>;
+    // Emperor
+    (Emperor, Hierophant) => Strength,
+    (Emperor, Lovers) => Chariot,
+    (Emperor, Chariot) => Devil,
+    (Emperor, Justice) => HangedMan,
+    (Emperor, Hermit) => Hierophant,
+    (Emperor, Fortune) => Star,
+    (Emperor, Strength) => Magician,
+    (Emperor, HangedMan) => Death,
+    (Emperor, Death) => Hermit,
+    (Emperor, Temperance) => Star,
+    (Emperor, Devil) => Moon,
+    (Emperor, Tower) => Strength,
+    (Emperor, Star) => Hierophant,
+    (Emperor, Moon) => Lovers,
+    (Emperor, Sun) => Temperance,
+    (Emperor, Judgement) => Sun,
+    (Emperor, Aeon) => Fortune,
 
-    fn sub(self, rhs: Self) -> Self::Output {
-        let mut result = vec![];
-        for arcana in Arcana::iterator() {
-            if arcana + rhs == self {
-                result.push(arcana);
-            }
-        }
-        result
-    }
+    // Hierophant
+    (Hierophant, Lovers) => Magician,
+    (Hierophant, Chariot) => Justice,
+    (Hierophant, Justice) => Fool,
+    (Hierophant, Hermit) => Chariot,
+    (Hierophant, Fortune) => Moon,
+    (Hierophant, Strength) => Fortune,
+    (Hierophant, HangedMan) => Strength,
+    (Hierophant, Death) => Fortune,
+    (Hierophant, Temperance) => Hermit,
+    (Hierophant, Devil) => Priestess,
+    (Hierophant, Tower) => Temperance,
+    (Hierophant, Star) => Moon,
+    (Hierophant, Moon) => Magician,
+    (Hierophant, Sun) => Tower,
+    (Hierophant, Judgement) => Emperor,
+    (Hierophant, Aeon) => Sun,
+
+    // Lovers
+    (Lovers, Chariot) => Priestess,
+    (Lovers, Justice) => Emperor,
+    (Lovers, Hermit) => Fool,
+    (Lovers, Fortune) => Temperance,
+    (Lovers, Strength) => Hermit,
+    (Lovers, HangedMan) => Justice,
+    (Lovers, Death) => HangedMan,
+    (Lovers, Temperance) => Death,
+    (Lovers, Devil) => Star,
+    (Lovers, Tower) => Sun,
+    (Lovers, Star) => Death,
+    (Lovers, Moon) => Empress,
+    (Lovers, Sun) => Devil,
+    (Lovers, Judgement) => Moon,
+    (Lovers, Aeon) => Tower,
+
+    // Chariot
+    (Chariot, Justice) => Magician,
+    (Chariot, Hermit) => Lovers,
+    (Chariot, Fortune) => Priestess,
+    (Chariot, Strength) => Temperance,
+    (Chariot, HangedMan) => Strength,
+    (Chariot, Death) => Hierophant,
+    (Chariot, Temperance) => Hermit,
+    (Chariot, Devil) => HangedMan,
+    (Chariot, Tower) => Star,
+    (Chariot, Star) => Fortune,
+    (Chariot, Moon) => Temperance,
+    (Chariot, Sun) => Strength,
+    (Chariot, Judgement) => Empress,
+    (Chariot, Aeon) => Hermit,
+
+    // Justice
+    (Justice, Hermit) => Magician,
+    (Justice, Fortune) => HangedMan,
+    (Justice, Strength) => Star,
+    (Justice, HangedMan) => Priestess,
+    (Justice, Death) => Hermit,
+    (Justice, Temperance) => Moon,
+    (Justice, Devil) => Temperance,
+    (Justice, Tower) => Sun,
+    (Justice, Star) => Hermit,
+    (Justice, Moon) => Temperance,
+    (Justice, Sun) => Magician,
+    (Justice, Judgement) => Fool,
+    (Justice, Aeon) => Judgement,
+
+    // Hermit
+    (Hermit, Fortune) => Justice,
+    (Hermit, Strength) => Emperor,
+    (Hermit, HangedMan) => Temperance,
+    (Hermit, Death) => Chariot,
+    (Hermit, Temperance) => Magician,
+    (Hermit, Devil) => Strength,
+    (Hermit, Tower) => Emperor,
+    (Hermit, Star) => Fool,
+    (Hermit, Moon) => Hierophant,
+    (Hermit, Sun) => Star,
+    (Hermit, Judgement) => Temperance,
+    (Hermit, Aeon) => Devil,
+
+    // Fortune
+    (Fortune, Strength) => Sun,
+    (Fortune, HangedMan) => Magician,
+    (Fortune, Death) => Star,
+    (Fortune, Temperance) => Tower,
+    (Fortune, Devil) => Empress,
+    (Fortune, Tower) => Aeon,
+    (Fortune, Star) => Magician,
+    (Fortune, Moon) => Death,
+    (Fortune, Sun) => Judgement,
+    (Fortune, Judgement) => Sun,
+    (Fortune, Aeon) => Moon,
+
+    // Strength
+    (Strength, HangedMan) => Chariot,
+    (Strength, Death) => Empress,
+    (Strength, Temperance) => Moon,
+    (Strength, Devil) => Lovers,
+    (Strength, Tower) => HangedMan,
+    (Strength, Star) => Priestess,
+    (Strength, Moon) => Devil,
+    (Strength, Sun) => Lovers,
+    (Strength, Judgement) => Devil,
+    (Strength, Aeon) => Fool,
+
+    // HangedMan
+    (HangedMan, Death) => Strength,
+    (HangedMan, Temperance) => Hierophant,
+    (HangedMan, Devil) => Priestess,
+    (HangedMan, Tower) => Death,
+    (HangedMan, Star) => Empress,
+    (HangedMan, Moon) => Chariot,
+    (HangedMan, Sun) => Aeon,
+    (HangedMan, Judgement) => Tower,
+    (HangedMan, Aeon) => Death,
+
+    // Death
+    (Death, Temperance) => Devil,
+    (Death, Devil) => Tower,
+    (Death, Tower) => Aeon,
+    (Death, Star) => Sun,
+    (Death, Moon) => HangedMan,
+    (Death, Sun) => Justice,
+    (Death, Judgement) => Devil,
+
+    // Temperance
+    (Temperance, Devil) => Fool,
+    (Temperance, Tower) => Devil,
+    (Temperance, Star) => Fortune,
+    (Temperance, Moon) => Priestess,
+    (Temperance, Sun) => Chariot,
+    (Temperance, Judgement) => Empress,
+    (Temperance, Aeon) => Justice,
+
+    // Devil
+    (Devil, Tower) => Judgement,
+    (Devil, Star) => Justice,
+    (Devil, Moon) => Fool,
+    (Devil, Sun) => Death,
+    (Devil, Judgement) => Death,
+    (Devil, Aeon) => Star,
+
+    // Tower
+    (Tower, Star) => Judgement,
+    (Tower, Moon) => Fortune,
+    (Tower, Sun) => Hierophant,
+    (Tower, Judgement) => Aeon,
+    (Tower, Aeon) => Sun,
+
+    // Star
+    (Star, Moon) => Sun,
+    (Star, Sun) => Justice,
+    (Star, Judgement) => Tower,
+    (Star, Aeon) => Judgement,
+
+    // Moon
+    (Moon, Sun) => Tower,
+    (Moon, Judgement) => Fortune,
+    (Moon, Aeon) => Judgement,
+
+    // Sun
+    (Sun, Judgement) => Aeon,
+    (Sun, Aeon) => Empress,
+
+    // Judgement
+    (Judgement, Aeon) => Fool,
 }

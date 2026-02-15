@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1.0" />
     <link rel="stylesheet" href="static/css/general.css" />
+    <link rel="stylesheet" href="static/css/persona_list.css" />
     <link
       rel="stylesheet"
       href="//cdn.datatables.net/2.3.6/css/dataTables.dataTables.min.css"
@@ -49,7 +50,11 @@
       </thead>
       <tbody>
         {% for persona in persona_list %}
-        <tr>
+        {% if persona.special_recipe %}
+          <tr class="special">
+        {% else %}
+          <tr>
+        {% endif %}
           <td data-order="{{ persona.arcana.as_usize() }}">
             {{ persona.arcana.to_string() }}
           </td>

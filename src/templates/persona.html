@@ -150,9 +150,11 @@
           </thead>
           <tbody>
             {% for ingredient in recipe %}
-            <tr>{{ ingredient.arcana.to_string() }}</tr>
-            <tr>{{ ingredient.base_level }}</tr>
-            <tr>{{ ingredient.name }}</tr>
+            <tr>
+            <td>{{ ingredient.arcana.to_string() }}</td>
+            <td>{{ ingredient.base_level }}</td>
+            <td>{{ ingredient.name }}</td>
+            </tr>
             {% endfor %}
           </tbody>
         </table>

@@ -43,6 +43,7 @@ impl Persona {
         persona_name: &str,
         // skill_list: &HashMap<String, Skill>,
         persona_data: &Value,
+        special_fusions: &HashMap<String, Vec<String>>,
     ) -> Self {
         let arcana = Arcana::from_str(
             persona_data
@@ -59,6 +60,8 @@ impl Persona {
                 .expect("Value was not a number"),
         )
         .expect("Base level was too large");
+
+        // gets the affinities as an array of chars (converting from string)
         let affinities = persona_data
             .get("resists")
             .expect("No race/arcana stored for persona")
@@ -74,10 +77,15 @@ impl Persona {
             .as_object()
             .expect("Skills not formatted properly");
         let mut skills = vec![];
+
+        // skills need to be stored with their learned level, the json stores
+        // inital skills as 0.1, 0.2 and 0.3 to denote which skill slot they appear in
         for (skill_name, value) in skill_map {
             let learned_level = if value.as_f64().unwrap() < 1.0 {
                 0
             } else {
+                // theurgies are stored as learnt at level 100, the data stores it as 5207
+                // so trying to convert from u64 will fail
                 u8::try_from(value.as_u64().unwrap()).unwrap_or(100)
             };
             skills.push((skill_name.clone(), learned_level));
@@ -104,7 +112,7 @@ impl Persona {
             arcana,
             base_level,
             affinities,
-            special_recipe: false,
+            special_recipe: special_fusions.contains_key(persona_name),
             inheritance: vec![],
             cost: 2000 + stats_sum.pow(2),
             skills,
@@ -124,8 +132,12 @@ impl Persona {
         rhs: &'a Self,
         persona_list: &'a HashMap<String, Self>,
     ) -> Option<&'a Self> {
+        use Arcana::*;
         let fused_arcana = self.arcana + rhs.arcana;
-        if self.name == rhs.name {
+        if self.name == rhs.name
+            || (self.arcana == Death && rhs.arcana == Aeon)
+            || (self.arcana == Aeon && rhs.arcana == Death)
+        {
             return None;
         }
         let mut result_persona: Option<&Self> = None;
@@ -188,11 +200,16 @@ impl Persona {
     pub fn find_all_reverse_fusions<'a>(
         &'a self,
         persona_list: &'a HashMap<String, Self>,
+        special_fusions: &HashMap<String, Vec<String>>,
     ) -> Recipes<'a> {
         use Recipes::*;
         if self.special_recipe {
-            // ! TODO: Get special Recipes
-            Special(vec![])
+            let names_in_recipe = special_fusions.get(&self.name).unwrap();
+            let mut recipe = vec![];
+            for name in names_in_recipe {
+                recipe.push(persona_list.get(name).unwrap());
+            }
+            Special(recipe)
         } else {
             let mut reverse_fusions = HashSet::new();
             let fusion_pairs = self.arcana.get_possible_combos();
@@ -305,7 +322,7 @@ mod persona_tests {
         let result = persona_db
             .get("Omoikane")
             .unwrap()
-            .find_all_reverse_fusions(&persona_db);
+            .find_all_reverse_fusions(&persona_db, &HashMap::new());
         match result {
             Normal(result) => assert_eq!(
                 (&result[0].0.name, &result[0].1.name),

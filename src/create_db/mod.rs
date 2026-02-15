@@ -47,7 +47,12 @@ pub fn make_skill_list() -> HashMap<String, Skill> {
     skill_list
 }
 
-pub fn make_persona_list() -> HashMap<String, Persona> {
+/// Converts a file located at ./persona_data/demon-data.json into a hashmap
+/// which contains the name of the persona as the key to a
+/// Persona struct corresponding to that.
+pub fn make_persona_list(
+    special_fusions: &HashMap<String, Vec<String>>,
+) -> HashMap<String, Persona> {
     let mut persona_list = HashMap::new();
     let mut contents = String::new();
     File::open("persona_data/demon-data.json")
@@ -60,8 +65,20 @@ pub fn make_persona_list() -> HashMap<String, Persona> {
     for (persona_name, persona) in map {
         persona_list.insert(
             persona_name.clone(),
-            Persona::from_json(persona_name, persona),
+            Persona::from_json(persona_name, persona, special_fusions),
         );
     }
     persona_list
+}
+
+/// Converts a file located at ./persona_data/special-recipes.json into a hashmap
+/// which contains the name of the persona as the key to a
+/// Vec containing a list of persona names which form the ingredients for a special fusion.
+pub fn make_special_fusions() -> HashMap<String, Vec<String>> {
+    let mut contents = String::new();
+    File::open("persona_data/special-recipes.json")
+        .expect("No file found")
+        .read_to_string(&mut contents)
+        .expect("failed to read");
+    from_str::<HashMap<String, Vec<String>>>(&contents).unwrap()
 }

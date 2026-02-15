@@ -7,6 +7,7 @@ use std::collections::HashMap;
 pub struct AppData {
     pub persona_list: HashMap<String, Persona>,
     pub skill_list: HashMap<String, Skill>,
+    pub special_fusions: HashMap<String, Vec<String>>,
 }
 
 /// Renders the persona list route
@@ -51,8 +52,10 @@ pub async fn persona_details(
                 persona: found_persona,
                 forward_fusions: found_persona
                     .find_all_forward_fusions(&data.persona_list),
-                reverse_fusions: found_persona
-                    .find_all_reverse_fusions(&data.persona_list),
+                reverse_fusions: found_persona.find_all_reverse_fusions(
+                    &data.persona_list,
+                    &data.special_fusions,
+                ),
                 skill_list,
             };
             HttpResponse::Ok().body(template.render().unwrap())
