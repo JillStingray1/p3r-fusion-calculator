@@ -57,3 +57,23 @@
   background-color: #303030;
   border-radius: 6px;
 }
+
+.persona_list_button {
+  align-self: left;
+  border-radius: 10px;
+  background-color: #303030;
+  padding: 20px 10px;
+}
+
+.persona_list_button a {
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.persona_list_button a:link {
+  color:aqua
+}
+
+.persona_list_button a:visited {
+  color:aqua
+}

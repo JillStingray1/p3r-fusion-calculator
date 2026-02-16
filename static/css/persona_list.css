@@ -1,3 +1,16 @@
 .special td  {
-    background-color: hsla(350, 100%, 88%, 0.500);
+    background-color: hsla(0, 100%, 80%, 0.534);
+}
+
+a:link {
+    color: aqua;
+}
+a:visited {
+    color: aqua;
+}
+
+.persona_list { 
+    display: flex;
+    align-items:  center;
+    justify-content: center;
 }
