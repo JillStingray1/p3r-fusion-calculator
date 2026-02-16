@@ -9,7 +9,7 @@ players to recipes that they need.
 ## Build
 
 To build this project:
-1. Install (rustup)[rustup.rs/].
+1. Install [rustup](rustup.rs/).
 2. Clone the repository into a local directory.
 3. Run `cargo build` within the cloned directory.
 
